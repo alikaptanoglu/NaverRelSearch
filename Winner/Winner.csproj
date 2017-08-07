@@ -172,6 +172,12 @@
     <Compile Include="LogManager.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="SearchAdApi.cs" />
+    <Compile Include="SlotAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SlotAddForm.Designer.cs">
+      <DependentUpon>SlotAddForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Main.cs">
@@ -201,6 +207,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SlotAddForm.resx">
+      <DependentUpon>SlotAddForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

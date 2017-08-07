@@ -57,6 +57,7 @@ namespace Winner
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -310,9 +311,20 @@ namespace Winner
             this.comboBox4.Size = new System.Drawing.Size(92, 20);
             this.comboBox4.TabIndex = 20;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(460, 24);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 42);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "추가";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Main
             // 
             this.ClientSize = new System.Drawing.Size(1353, 634);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.comboBox4);
             this.Controls.Add(this.label6);
@@ -379,6 +391,7 @@ namespace Winner
         private ComboBox comboBox3;
         private Label label7;
         private ComboBox comboBox4;
+        private Button button1;
     }
 }
 

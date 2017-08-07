@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WindowsFormsApp1.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BASE_URL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.naver.com</Value>
+    </Setting>
+    <Setting Name="API_KEY" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0100000000038cf7da44d654b5d6fcab42f88a558845d3a97fcb9dfcd0aad2054584212746</Value>
+    </Setting>
+    <Setting Name="SECRET_KEY" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AQAAAAADjPfaRNZUtdb8q0L4ilWINU8y+9i+PeohjaAcGpFIGA==</Value>
+    </Setting>
+    <Setting Name="CUSTOMER_ID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1198631</Value>
+    </Setting>
+    <Setting Name="USE_LOGIN" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

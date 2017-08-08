@@ -63,9 +63,69 @@ namespace Winner.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
+        internal static System.Drawing.Bitmap config_tool_icon_gray__1_ {
+            get {
+                object obj = ResourceManager.GetObject("config_tool_icon_gray (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap config_tool_icon_gray__1_1 {
+            get {
+                object obj = ResourceManager.GetObject("config_tool_icon_gray (1)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap grey_new_seo_05_512_56x51 {
+            get {
+                object obj = ResourceManager.GetObject("grey_new_seo-05-512_56x51", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_Award_128368__1_ {
+            get {
+                object obj = ResourceManager.GetObject("if_Award_128368 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_Setting_37062 {
+            get {
+                object obj = ResourceManager.GetObject("if_Setting_37062", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
         internal static System.Drawing.Bitmap if_Setting_37062_118x136 {
             get {
                 object obj = ResourceManager.GetObject("if_Setting_37062_118x136", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_settings_981084__1__png111 {
+            get {
+                object obj = ResourceManager.GetObject("if_settings_981084 (1).png111", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,6 +155,16 @@ namespace Winner.Properties {
         internal static System.Drawing.Bitmap 로그인배경 {
             get {
                 object obj = ResourceManager.GetObject("로그인배경", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap 캡처 {
+            get {
+                object obj = ResourceManager.GetObject("캡처", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

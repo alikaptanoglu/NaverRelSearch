@@ -29,8 +29,11 @@ namespace Winner
 
         private Thread naverAdThread;
         private Thread browserThread;
+        private Thread keyWordThread;
 
         private SQLite sqlLite;
+
+        private SearchAdApi restApi = new SearchAdApi();
 
         public static int HEADER_SLOT = 0;
         public static int HEADER_BROWSER = 1;
@@ -72,7 +75,6 @@ namespace Winner
                     return;
                 }             
             }
-            isLoginSuccess = true;
 
             // 데이터베이스 초기화
             SetUpDataBase();
@@ -93,8 +95,11 @@ namespace Winner
             Browser.SetLogManager( LogManager);
 
             // Naver 조회수 쓰레드 모듈 시작
-            naverAdThread = new Thread(new ThreadStart( NaverAdThread));
-            naverAdThread.Start();
+            //naverAdThread = new Thread(new ThreadStart( NaverAdThread));
+            //naverAdThread.Start();
+
+            keyWordThread = new Thread(new ThreadStart(backGroundKeywordWork));
+            keyWordThread.Start();
         }
 
         private void SetUpDataBase()
@@ -130,7 +135,7 @@ namespace Winner
             var apiKey = Properties.Settings.Default.API_KEY;
             var secretKey = Properties.Settings.Default.SECRET_KEY;
             var managerCustomerId = long.Parse(Properties.Settings.Default.CUSTOMER_ID);
-            var rest = new SearchAdApi(baseUrl, apiKey, secretKey);
+            var rest = new SearchAdApi();
 
             while (true)
             {               
@@ -152,7 +157,7 @@ namespace Winner
                         var request = new RestRequest("/keywordstool", Method.GET);
                         request.AddQueryParameter("hintKeywords", (string)dataGridView1.Rows[i].Cells[HEADER_SEARCH].Value);
                         request.AddQueryParameter("showDetail", "1");
-                        List<RelKwdStat> relKwdStats = rest.Execute<RelKwdStat>(request, managerCustomerId, "keywordList");
+                        List<RelKwdStat> relKwdStats = rest.Execute<RelKwdStat>(request, "keywordList");
 
                         if (relKwdStats != null)
                         {
@@ -196,10 +201,10 @@ namespace Winner
             setExternalAddress( CommonUtils.GetExternalIPAddress());
 
             // 콤보박스 초기값
-            this.comboBox1.SelectedIndex = 0;
-            this.comboBox2.SelectedIndex = 0;
-            this.comboBox3.SelectedIndex = 0;
-            this.comboBox4.SelectedIndex = 0;
+           // this.comboBox1.SelectedIndex = 0;
+           // this.comboBox2.SelectedIndex = 0;
+           // this.comboBox3.SelectedIndex = 0;
+            //this.comboBox4.SelectedIndex = 0;
 
             // 테이블 초기화
             SetupDataGridVIew();
@@ -244,18 +249,19 @@ namespace Winner
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("굴림", 9F, FontStyle.Bold);
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.YellowGreen;            
 
-            string[] headers = new string[] { "슬롯번호","브라우저", "에이전트", "카테고리", "1차 검색어", "2차 검색어", "목표횟수", "현재횟수", "조회수(PC/M)", "초기순위", "현재순위", "등록날짜"};
-            int[] widths = new int[] { 120, 80, 80, 80, 150, 150, 80, 80, 150, 80, 80, -1};            
+            string[] headers = new string[] { "슬롯번호","등록일", "목표횟수", "현재횟수", "순위", "메모"};
+            int[] widths = new int[] { 120, 100, 100, 100, 100, -1};            
 
             dataGridView1.ColumnCount = headers.Length;
 
             for ( int i = 0; i < headers.Length; i++)
             {
                 dataGridView1.Columns[i].Name =  headers[i];
-                if (!headers[i].Equals("목표횟수"))
-                {
-                    dataGridView1.Columns[i].ReadOnly = true;                    
-                }
+
+                //if (!headers[i].Equals("목표횟수"))
+                //{
+                //    dataGridView1.Columns[i].ReadOnly = true;                    
+                //}
 
                 if (widths[i] == -1)
                 {
@@ -373,28 +379,28 @@ namespace Winner
         //  Row 추가
         private void button4_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length == 0 || textBox2.Text.Length == 0)
-            {
-                using (new CenterWinDialog(this))
-                {
-                    MessageBox.Show("검색어와 노출어는 모두 입력하여야 합니다.", "경고");
-                }
-                return;
-            }
+           // if (textBox1.Text.Length == 0 || textBox2.Text.Length == 0)
+            //{
+           //     using (new CenterWinDialog(this))
+           //     {
+          //          MessageBox.Show("검색어와 노출어는 모두 입력하여야 합니다.", "경고");
+          //      }
+          //      return;
+//}
 
             Slot slot = new Slot();
             slot.OID = DateUtils.GetCurrentTimeStamp().ToString();            
-            slot.category = comboBox2.Text;
-            slot.search = textBox1.Text;
-            slot.nxSearch = textBox2.Text;
+           // slot.category = comboBox2.Text;
+           // slot.search = textBox1.Text;
+            //slot.nxSearch = textBox2.Text;
             slot.toCount = "1";
             slot.currCount = "0";
             slot.View = "*";
             slot.initRank = "*";
             slot.currRank = "*";
             slot.createdAt = DateTime.Now.ToString();
-            slot.agent = comboBox3.Text;
-            slot.browser = comboBox4.Text;
+            //slot.agent = comboBox3.Text;
+            //slot.browser = comboBox4.Text;
 
             AddDataGridRow(slot);
 
@@ -491,7 +497,7 @@ namespace Winner
             {
 
                 // 데이터 베이스 쓰기 
-                SaveDataBase();
+                //SaveDataBase();
 
                 // 쓰래드 종료
                 AbortThread();
@@ -541,6 +547,11 @@ namespace Winner
             {
                 browserThread.Abort();
             }
+
+            if (keyWordThread != null)
+            {
+                keyWordThread.Abort();
+            }
         }
 
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -587,6 +598,76 @@ namespace Winner
         {
             SlotAddForm MdiChild = new SlotAddForm();
             MdiChild.ShowDialog();
+        }
+
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        // 백그라운드 순위 검색
+        private Queue<string> queue = new Queue<string>();
+        private void backGroundKeywordWork()
+        {
+            while (true)
+            {
+                if (queue.Count == 0)
+                {
+                    continue;
+                }
+                
+                string keyWord = queue.Dequeue();                
+
+                var request = new RestRequest("/keywordstool", Method.GET);
+                request.AddQueryParameter("hintKeywords", keyWord);
+                request.AddQueryParameter("showDetail", "1");
+                List<RelKwdStat> relKwdStats = restApi.Execute<RelKwdStat>(request, "keywordList");
+
+                if (relKwdStats != null)
+                {
+                    RelKwdStat relKwdStat = relKwdStats.First();
+
+                    // PC
+                    this.Invoke(new Action(delegate ()
+                    {
+                        label5.Text = relKwdStat.monthlyPcQcCnt;
+
+                        // Mb
+                        label6.Text = relKwdStat.monthlyMobileQcCnt;
+
+                        // To
+                        label7.Text = (long.Parse(relKwdStat.monthlyPcQcCnt) + long.Parse(relKwdStat.monthlyMobileQcCnt)).ToString();
+                    }));                                    
+                }
+            }
+        }
+
+
+        // 키워드 순위 검색
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {         
+            string keyword = textBox1.Text;
+            queue.Enqueue(keyword);
+        }
+
+        private void NaverKeywordSearch(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

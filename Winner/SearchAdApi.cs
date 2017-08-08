@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,20 +11,19 @@ namespace Naver.SearchAd
 {
     class SearchAdApi
     {
-        private readonly string BaseUrl;
-        private readonly string ApiKey;
-        private readonly string SecretKey;
+        private readonly string BaseUrl = Winner.Properties.Settings.Default.BASE_URL;
+        private readonly string ApiKey = Winner.Properties.Settings.Default.API_KEY;
+        private readonly string SecretKey = Winner.Properties.Settings.Default.SECRET_KEY;
+        private readonly long managerCustomerId = long.Parse(Winner.Properties.Settings.Default.CUSTOMER_ID);
         private readonly HMACSHA256 HMAC;
 
-        public SearchAdApi(string baseUrl, string apiKey, string secretKey)
-        {
-            this.BaseUrl = baseUrl;
-            this.ApiKey = apiKey;
-            this.SecretKey = secretKey;
-            this.HMAC = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
+
+        public SearchAdApi()
+        {            
+            this.HMAC = new HMACSHA256(Encoding.UTF8.GetBytes(SecretKey));            
         }
 
-        public List<T> Execute<T>(RestRequest request, long customerId, string root) where T : new()
+        public List<T> Execute<T>(RestRequest request, string root) where T : new()
         {
 
             try
@@ -34,16 +34,11 @@ namespace Naver.SearchAd
                 var signature = generateSignature(timestamp, request.Method.ToString(), request.Resource);
 
                 request.AddHeader("X-API-KEY", ApiKey);
-                request.AddHeader("X-Customer", customerId.ToString());
+                request.AddHeader("X-Customer", managerCustomerId.ToString());
                 request.AddHeader("X-Timestamp", timestamp);
                 request.AddHeader("X-Signature", signature);
 
                 var response = client.Execute<T>(request);
-
-                if (response.ErrorException != null)
-                {
-                    throw new ApplicationException("Error retrieving response. Check inner details for more info.", response.ErrorException);
-                }
 
                 var list = JObject.Parse(response.Content).SelectToken(root).ToObject<List<T>>();
 
@@ -51,10 +46,8 @@ namespace Naver.SearchAd
             }
             catch
             {
-                // Error
+                return null;
             }
-
-            return null;
         }
 
         private static IEnumerable<JToken> AllChildren(JToken json)

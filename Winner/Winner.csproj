@@ -263,8 +263,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Radiation.ico" />
+    <None Include="Resources\config_tool_icon_gray %281%29.png" />
+    <None Include="Resources\config_tool_icon_gray %281%291.png" />
+    <None Include="Resources\if_Setting_37062.png" />
+    <None Include="Resources\grey_new_seo-05-512_56x51.jpg" />
+    <None Include="Resources\if_settings_981084 %281%29.png111.png" />
+    <None Include="Resources\if_Award_128368 %281%29.png" />
     <Content Include="Resources\다운로드_118x136.jpg" />
     <Content Include="Resources\로그인배경.jpg" />
+    <None Include="Resources\캡처.PNG" />
     <None Include="Resources\로그인배경1.jpg" />
     <None Include="Resources\다운로드_118x1361.jpg" />
   </ItemGroup>

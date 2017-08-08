@@ -171,6 +171,12 @@
     </Compile>
     <Compile Include="LogManager.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="Ranking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ranking.Designer.cs">
+      <DependentUpon>Ranking.cs</DependentUpon>
+    </Compile>
     <Compile Include="SearchAdApi.cs" />
     <Compile Include="Setting.cs">
       <SubType>Form</SubType>
@@ -219,6 +225,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Ranking.resx">
+      <DependentUpon>Ranking.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Setting.resx">
       <DependentUpon>Setting.cs</DependentUpon>
     </EmbeddedResource>

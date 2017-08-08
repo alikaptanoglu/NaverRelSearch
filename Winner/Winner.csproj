@@ -171,7 +171,19 @@
     </Compile>
     <Compile Include="LogManager.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="Ranking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ranking.Designer.cs">
+      <DependentUpon>Ranking.cs</DependentUpon>
+    </Compile>
     <Compile Include="SearchAdApi.cs" />
+    <Compile Include="Setting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Setting.Designer.cs">
+      <DependentUpon>Setting.cs</DependentUpon>
+    </Compile>
     <Compile Include="SlotAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +191,12 @@
       <DependentUpon>SlotAddForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLite.cs" />
+    <Compile Include="UpdateSlot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateSlot.Designer.cs">
+      <DependentUpon>UpdateSlot.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -207,8 +225,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Ranking.resx">
+      <DependentUpon>Ranking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Setting.resx">
+      <DependentUpon>Setting.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SlotAddForm.resx">
       <DependentUpon>SlotAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateSlot.resx">
+      <DependentUpon>UpdateSlot.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>

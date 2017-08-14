@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,6 +18,27 @@ namespace Winner
 {
     class CommonUtils
     {
+        public static char[] delimiterChars = { ' ', ',', '.', ':', '\t', '/' };
+
+        public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = oEncoding.GetBytes(EncodingText);
+            return System.Convert.ToBase64String(arr);
+        }
+
+        public static string Base64Decoding(string DecodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = System.Convert.FromBase64String(DecodingText);
+            return oEncoding.GetString(arr);
+        }
+        
+
         public  static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -52,6 +74,19 @@ namespace Winner
             //string realIP = Parsing(Parsing(varTemp, "Current IP Address: ", 1), "</body>", 0).Trim();
             return IP;
     
+        }
+
+        public static object[] MakeArray(Object o)
+        {
+            FieldInfo[] fields = o.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            object[] retArray = new object[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                retArray[i] = fields[i].GetValue(o);
+            }
+
+            return retArray;
         }
 
         public static string Parsing(string _body, string _parseString, int no)
@@ -90,6 +125,21 @@ namespace Winner
             }
         }
 
+        public static string MakeDelimeterItem(params string[] list)
+        {            
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < list.Length; i++)
+            {
+                sb.Append(list[i]);
+                if (i != list.Length - 1)
+                {
+                    sb.Append("/");
+                }                
+            }
+
+            return sb.ToString();            
+        }
+
         public static int GetRandomValue(string v)
         {
             string[] list = v.Split(Configuration.DELIMITER_CHARS);
@@ -114,6 +164,19 @@ namespace Winner
             return null;
         }
 
+    }
+
+    class ObjectUtils
+    {
+        public static bool isNull( string Object)
+        {
+            if (Object == null || Object.Length == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     class MobileUtils

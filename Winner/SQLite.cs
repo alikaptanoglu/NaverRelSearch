@@ -53,6 +53,41 @@ namespace Winner
             return Configs;
         }
 
+        internal List<LogicItem> SelectAllLogicItemsByLogicId(string id)
+        {
+            ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = {2} order by sequence asc", LogicItem.Column, LogicItem.TableName, id));
+            List<LogicItem> logicItems = LogicItem.MakeResultSet(reader);
+
+            DisconnectionToDB();
+
+            return logicItems;
+        }
+
+        internal List<LogicInput> SelectAllLogicInputsByLogicId(string id)
+        {
+            ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = {2}", LogicInput.Column, LogicInput.TableName, id));
+            List<LogicInput> logicInputs = LogicInput.MakeResultSet(reader);
+
+            DisconnectionToDB();
+
+            return logicInputs;
+        }
+
+        internal List<RankingModel> SelectAllRanking()
+        {
+            ConnectionToDB();
+            
+            SQLiteDataReader reader = SelectExecuteSQL( string.Format("select * from ranking", RankingModel.Column));
+            List <RankingModel> rankings = RankingModel.MakeResultSet(reader);
+
+            DisconnectionToDB();
+            return rankings;
+        }
+
         public void ConnectionToDB()
         {
             if (dbConnection == null)
@@ -129,6 +164,68 @@ namespace Winner
             DisconnectionToDB();
         }
 
+        internal void DeleteLogicInputByLogicId(string logicId)
+        {
+            ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicInput.TableName, logicId));
+            DisconnectionToDB();
+        }
+
+        internal void InsertAllLogicInpts(List<LogicInput> logicInputs)
+        {
+            ConnectionToDB();
+
+            using (var command = new SQLiteCommand(dbConnection))
+            {
+                using (var transaction = dbConnection.BeginTransaction())
+                {
+                    // 100,000 inserts                
+                    for (var i = 0; i < logicInputs.Count; i++)
+                    {
+                        LogicInput logicInput = logicInputs.ElementAt(i);                                                
+                        command.CommandText =
+                            string.Format("insert into "+ LogicInput.TableName +" (" + LogicInput.Column + ") values (" + LogicInput.Values + ")", CommonUtils.MakeArray(logicInput));
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            DisconnectionToDB();
+        }
+
+        internal void InsertAllLogicItems(List<LogicItem> logicItems)
+        {
+            ConnectionToDB();
+
+            using (var command = new SQLiteCommand(dbConnection))
+            {
+                using (var transaction = dbConnection.BeginTransaction())
+                {
+                    // 100,000 inserts                
+                    for (var i = 0; i < logicItems.Count; i++)
+                    {
+                        LogicItem logicItem = logicItems.ElementAt(i);
+                        command.CommandText =
+                            string.Format("insert into " + LogicItem.TableName + " (" + LogicItem.Column + ") values (" + LogicItem.Values + ")", CommonUtils.MakeArray( logicItem));
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            DisconnectionToDB();
+        }
+
+        internal void DeleteAllLogicItems(string logicId)
+        {
+            ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicItem.TableName, logicId));
+            DisconnectionToDB();
+        }
+
         public void DeleteAllConfigurationByOwner(string owner)
         {
             ConnectionToDB();
@@ -181,6 +278,42 @@ namespace Winner
             }
 
             DisconnectionToDB();
+        }
+
+        public void InsertAllRankings(List<RankingModel> rankingModels)
+        {
+            ConnectionToDB();
+
+            using (var command = new SQLiteCommand(dbConnection))
+            {
+                using (var transaction = dbConnection.BeginTransaction())
+                {
+                    // 100,000 inserts
+                    for (var i = 0; i < rankingModels.Count; i++)
+                    {
+                        RankingModel rankingModel = rankingModels.ElementAt(i);
+                                            
+                        command.CommandText =
+                            string.Format("insert into  "+ RankingModel.TableName +" (" + RankingModel.Column + ") values (" + RankingModel.Values + ")", CommonUtils.MakeArray(rankingModel));
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            DisconnectionToDB();
+        }
+
+        public List<Logic> SelectAllLogics()
+        {
+            ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select * from " + Logic.TableName, Logic.Column));
+            List<Logic> logics = Logic.MakeResultSet(reader);
+
+            DisconnectionToDB();
+            return logics;
         }
 
         public List<Slot> SelectAllSlots()

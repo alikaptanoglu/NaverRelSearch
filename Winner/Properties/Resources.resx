@@ -117,38 +117,110 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="48-48-2f7ba1707e6a77c762f0309636ffec74-configuration" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\48-48-2f7ba1707e6a77c762f0309636ffec74-configuration.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rsz_if_1_330413" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rsz_if_1_330413.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="re" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\re.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_7_330410-(1)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_edit-add_9254 (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_edit-add_9254 (2)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_1_3304131" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_1_3304131.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_7_330410-(1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="resources" xml:space="preserve">
     <value />
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="캡처" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\캡처.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="btn-confirm1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn-confirm1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="config_tool_icon_gray (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\config_tool_icon_gray (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_1_330413" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_1_330413.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_Setting_37062_118x136" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Setting_37062_118x136.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_17_3303991" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_3303991.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_Setting_37062" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Setting_37062.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_3_330411.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_settings_981084 (1).png111" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_settings_981084 (1).png111.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="AA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_18_330400.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="다운로드_118x136" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\다운로드_118x1361.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="KakaoTalk_20170812_212819834" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KakaoTalk_20170812_212819834.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_7_330410-(1)5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn-confirm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn-confirm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KakaoTalk_20170812_2128198341" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KakaoTalk_20170812_2128198341.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_11_330397-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_11_330397-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="로그인배경" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\로그인배경1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="grey_new_seo-05-512_56x51" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\grey_new_seo-05-512_56x51.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_7_330410-(1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="config_tool_icon_gray (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\config_tool_icon_gray (1)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="KakaoTalk_20170812_2128196801" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KakaoTalk_20170812_2128196801.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_Award_128368 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Award_128368 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_7_330410-(1)6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_edit-add_9254 (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_edit-add_9254 (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="캡처" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\캡처.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_17_3303994" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_3303994.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_17_330399" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_330399.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="48-48-47b1dd4ae4f2b98815bbee4c07fb936f-trophy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\48-48-47b1dd4ae4f2b98815bbee4c07fb936f-trophy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn-backtoedit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn-backtoedit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_17_3303993" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_3303993.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_7_330410-(1)3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_17_3303992" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_3303992.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_7_330410-(1)4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_18_330400-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_18_330400-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KakaoTalk_20170812_212819680" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KakaoTalk_20170812_212819680.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\abc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

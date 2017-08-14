@@ -199,20 +199,30 @@ namespace Winner
 
             // 아이피 레이블 초기화
             setExternalAddress( CommonUtils.GetExternalIPAddress());
-
-            // 콤보박스 초기값
-           // this.comboBox1.SelectedIndex = 0;
-           // this.comboBox2.SelectedIndex = 0;
-           // this.comboBox3.SelectedIndex = 0;
-            //this.comboBox4.SelectedIndex = 0;
-
+            
             // 테이블 초기화
             SetupDataGridVIew();
+
+            // 로직설정아이템 초기화
+            InitLogic();
 
             // 슬롯 초기화
             List<Slot> slots = sqlLite.SelectAllSlots();
             AddDataGridRows(slots);
 
+        }
+
+        // 로직 콤보박스 초기화
+        private void InitLogic()
+        {
+            List<Logic> logics = sqlLite.SelectAllLogics();
+
+            for (int i = 0; i < logics.Count; i++)
+            {
+                comboBox1.Items.Add(logics[i].name);
+            }
+            
+            comboBox1.SelectedIndex = 0;
         }
 
         // 아이피 뷰 설정
@@ -246,7 +256,7 @@ namespace Winner
             //this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.AllowUserToAddRows = false;
             Controls.Add(dataGridView1);
-            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("굴림", 9F, FontStyle.Bold);
+            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.YellowGreen;            
 
             string[] headers = new string[] { "슬롯번호","등록일", "목표횟수", "현재횟수", "순위", "메모"};
@@ -312,17 +322,17 @@ namespace Winner
         delegate void EnableWorkBtnCallBack(bool b, string t);
         public void EnableWorkBtn(bool doWork, string text)
         {
-            EnableWorkBtnCallBack Callback = new EnableWorkBtnCallBack(EnableWorkBtn);
+            //EnableWorkBtnCallBack Callback = new EnableWorkBtnCallBack(EnableWorkBtn);
 
-            if (button2.InvokeRequired)
-            {
-                button2.Invoke(Callback, doWork, text);
-            }
-            else
-            {
-                button2.Text = text;
-                button2.Enabled = doWork;
-            }
+            //if (button2.InvokeRequired)
+            //{
+            //    button2.Invoke(Callback, doWork, text);
+            //}
+            //else
+            //{
+            //    button2.Text = text;
+            //    button2.Enabled = doWork;
+            //}
             
         }
 
@@ -483,7 +493,7 @@ namespace Winner
         }
 
         // 환경설정 
-        private void button6_Click(object sender, EventArgs e)
+        private void ClickConfiguration(object sender, EventArgs e)
         {
             Config MdiChild = new Config();            
             MdiChild.ShowDialog();
@@ -493,15 +503,13 @@ namespace Winner
         private void CloseFormEvent(object sender, FormClosedEventArgs e)
         {
             
-            if (isLoginSuccess)
-            {
-
+           
                 // 데이터 베이스 쓰기 
                 //SaveDataBase();
 
                 // 쓰래드 종료
                 AbortThread();
-            }
+          
             
             
         
@@ -668,6 +676,26 @@ namespace Winner
         private void label6_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+
+        // 순위조회
+        private void SearchRanking(object sender, EventArgs e)
+        {
+            Ranking MdiChild = new Ranking();
+            MdiChild.ShowDialog();
+        }
+
+        // 추가
+        private void pictureBox6_Click(object sender, EventArgs e)
+        {
+            SlotAddForm MdiChild = new SlotAddForm();
+            MdiChild.ShowDialog();
         }
     }
 }

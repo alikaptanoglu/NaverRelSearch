@@ -16,7 +16,7 @@ namespace Winner
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SlotAddForm());
+            Application.Run(new Main());
         }
     }
 }

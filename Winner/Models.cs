@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace Naver.SearchAd
 {
+    // 순서 중요함 필드순서 변경하면 안됨
     public class RelKwdStat
     {
         public string relKeyword { get; set; }
@@ -15,6 +17,163 @@ namespace Naver.SearchAd
         public string monthlyAveMobileCtr { get; set; }
         public string plAvgDepth { get; set; }
         public string compIdx { get; set; }        
+    }
+
+    public class Logic
+    {
+        
+        public string id { get; set; }
+        public string name { get; set; }
+    
+        public static string Column = "Id, Name";
+        public static string TableName = "Logic";
+
+        internal static List<Logic> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<Logic> logics = new List<Logic>();
+
+            while (reader.Read())
+            {
+                Logic logic = new Logic();
+                logic.id = (string)reader["Id"];
+                logic.name = (string)reader["Name"];                
+                logics.Add( logic);
+            }
+
+            return logics;
+        }
+    }
+
+    public class LogicInput
+    {        
+        public string key { get; set; }
+        public string value { get; set; }
+        public string logicId { get; set; }    
+
+        public const string CONST_KEYWORD = "Logic.Input.Keyword";
+        public const string CONST_STAY = "Logic.Input.Stay";
+        public const string CONST_SCROLL = "Logic.Input.Scroll";
+        public const string CONST_POST_VIEW = "Logic.Input.Post.View";
+        public const string CONST_HISTORY_PREV = "Logic.Input.History.Prev";
+        public const string CONST_HISTORY_NEXT = "Logic.Input.History.Next";
+        public const string CONST_CATEGORY_MOVE = "Logic.Input.Category.Move";
+        public const string CONST_AGNET = "Logic.Input.Agent";
+        public const string CONST_BROWSER = "Logic.Input.Browser";
+        public const string CONST_DUPLICATE_ADDRESS = "Logic.Input.Duplicate.Address";
+
+        public static string TableName = "LogicInput";
+        public static object Column = "Key, Value, LogicId";
+        public static string Values = "'{0}','{1}','{2}'";
+
+        internal static List<LogicInput> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<LogicInput> logicInputs = new List<LogicInput>();
+
+            while (reader.Read())
+            {
+                LogicInput logicInput = new LogicInput();
+                logicInput.key = (string)reader["Key"];
+                logicInput.value = (string)reader["Value"];
+                logicInput.logicId = (string)reader["LogicId"];                
+
+                logicInputs.Add(logicInput);
+            }
+
+            return logicInputs;
+        }
+
+        public static List<LogicInput> ConvertMapToObject(Dictionary<string, string> Inputs, string logicId)
+        {
+            List<LogicInput> LogicInputs = new List<LogicInput>();
+
+            List<string> list = Inputs.Keys.ToList();
+            for (var i = 0; i < list.Count; i++)
+            {
+                string key = list.ElementAt(i);
+                string value = Inputs[key];
+
+                LogicInput logicInput = new LogicInput();
+                logicInput.logicId = logicId;
+                logicInput.key = key;
+                logicInput.value = value;
+
+                LogicInputs.Add(logicInput);
+            }
+
+            return LogicInputs;
+        }
+
+
+    }
+
+    public class LogicItem
+    {                
+        public string sequence { get; set; }
+        public string action { get; set; }
+        public string value { get; set; }
+        public string logicId { get; set; }
+        
+        public static int HEADER_SEQUENCE = 0;
+        public static int HEADER_ACTION = 1;
+        public static int HEADER_VALUE = 2;
+
+        public static object TableName = "LogicItem";
+        public static object Column = "Sequence, Action, Value, LogicId";
+        public static string Values = "'{0}','{1}','{2}','{3}'";
+
+        internal static List<LogicItem> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<LogicItem> logicItems = new List<LogicItem>();
+
+            while (reader.Read())
+            {
+                LogicItem logicItem = new LogicItem();
+                logicItem.sequence = (string)reader["Sequence"];
+                logicItem.action = (string)reader["Action"];
+                logicItem.value = (string)reader["Value"];
+                logicItem.logicId = (string)reader["LogicId"];
+
+                logicItems.Add(logicItem);
+            }
+
+            return logicItems;
+        }
+    }
+
+    public class RankingModel
+    {
+        public string keyword { get; set; }
+        public string subKeyword { get; set; }
+        public string rank { get; set; }
+        public string checkedAt { get; set; }
+        public string more { get; set; }
+
+
+        
+        public static string TableName = "Ranking";
+        public static string Column = "Keyword, SubKeyword, Rank, CheckedAt, More";
+        public static string Values = "'{0}','{1}','{2}','{3}','{4}'";
+
+        public static List<RankingModel> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<RankingModel> Rankings = new List<RankingModel>();
+
+            while (reader.Read())
+            {
+                RankingModel rankingModel = new RankingModel();
+                rankingModel.keyword = (string)reader["Keyword"];
+                rankingModel.subKeyword = (string)reader["SubKeyword"];
+                rankingModel.rank = (string)reader["Rank"];
+                rankingModel.checkedAt = (string)reader["CheckedAt"];
+                rankingModel.more = (string)reader["More"];
+
+                Rankings.Add( rankingModel);
+
+            }
+
+            return Rankings;
+
+        }
     }
 
     public class Configuration

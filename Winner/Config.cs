@@ -606,38 +606,38 @@ namespace Winner
         }
 
         // 그리드 컨택스트 메뉴
-        int contextRowIndex = 0;
-        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                ContextMenuStrip m = new ContextMenuStrip();
+        //int contextRowIndex = 0;
+        //private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    if (e.Button == MouseButtons.Right)
+        //    {
+        //        ContextMenuStrip m = new ContextMenuStrip();
 
-                var hti = dataGridView1.HitTest(e.X, e.Y);
-                this.contextRowIndex = hti.RowIndex;
+        //        var hti = dataGridView1.HitTest(e.X, e.Y);
+        //        this.contextRowIndex = hti.RowIndex;
 
-                m.Items.Add("Delete").Name = "Delete";                          
-                m.Show(dataGridView1, new Point(e.X, e.Y));
-                m.ItemClicked += new ToolStripItemClickedEventHandler(ContextMenuClick);
-            }
-        }
+        //        m.Items.Add("Delete").Name = "Delete";                          
+        //        m.Show(dataGridView1, new Point(e.X, e.Y));
+        //        m.ItemClicked += new ToolStripItemClickedEventHandler(ContextMenuClick);
+        //    }
+        //}
 
-        private void ContextMenuClick(object sender, ToolStripItemClickedEventArgs e)
-        {
+        //private void ContextMenuClick(object sender, ToolStripItemClickedEventArgs e)
+        //{
 
-            DataGridViewRow row = dataGridView1.Rows[contextRowIndex];
-            switch (e.ClickedItem.Name.ToString())
-            {
+        //    DataGridViewRow row = dataGridView1.Rows[contextRowIndex];
+        //    switch (e.ClickedItem.Name.ToString())
+        //    {
                 
-                case "Delete":
-                {
-                      dataGridView1.Rows.Remove(row);
-                }
-                break;
-            }
+        //        case "Delete":
+        //        {
+        //              dataGridView1.Rows.Remove(row);
+        //        }
+        //        break;
+        //    }
 
             
-        }
+        //}
     }
 }
 

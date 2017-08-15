@@ -17,7 +17,7 @@ using System.Windows.Forms;
 namespace Winner
 {
 
-    //EJH
+    //EJH - 개발자가 될 수 있을까? 
     class CommonUtils
     {
         public static char[] delimiterChars = { ' ', ',', '.', ':', '\t', '/' };

@@ -16,6 +16,8 @@ using System.Windows.Forms;
 
 namespace Winner
 {
+
+    //EJH
     class CommonUtils
     {
         public static char[] delimiterChars = { ' ', ',', '.', ':', '\t', '/' };
@@ -76,6 +78,7 @@ namespace Winner
     
         }
 
+        
         public static object[] MakeArray(Object o)
         {
             FieldInfo[] fields = o.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

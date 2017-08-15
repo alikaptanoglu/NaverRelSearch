@@ -605,6 +605,25 @@ namespace Winner
             InitLogicItem(currentLogicId);
         }
 
+        // 로직아이템 선택삭제
+        private void button3_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in this.dataGridView1.SelectedRows)
+            {
+                dataGridView1.Rows.RemoveAt(row.Index);
+            }
+        }
+
+        // 로직아이템 삭제
+        private void button1_Click(object sender, EventArgs e)
+        {
+           foreach (DataGridViewRow row in dataGridView1.Rows)
+           {
+                dataGridView1.Rows.Clear();
+                dataGridView1.Refresh();
+            }
+        }
+
         // 그리드 컨택스트 메뉴
         //int contextRowIndex = 0;
         //private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -628,7 +647,7 @@ namespace Winner
         //    DataGridViewRow row = dataGridView1.Rows[contextRowIndex];
         //    switch (e.ClickedItem.Name.ToString())
         //    {
-                
+
         //        case "Delete":
         //        {
         //              dataGridView1.Rows.Remove(row);
@@ -636,7 +655,7 @@ namespace Winner
         //        break;
         //    }
 
-            
+
         //}
     }
 }

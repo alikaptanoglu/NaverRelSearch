@@ -345,7 +345,7 @@ namespace Winner
             this.pictureBox4.Size = new System.Drawing.Size(26, 26);
             this.pictureBox4.TabIndex = 31;
             this.pictureBox4.TabStop = false;
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox6_Click);
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // pictureBox5
             // 
@@ -356,6 +356,7 @@ namespace Winner
             this.pictureBox5.Size = new System.Drawing.Size(26, 26);
             this.pictureBox5.TabIndex = 32;
             this.pictureBox5.TabStop = false;
+            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
             // 
             // Main
             // 

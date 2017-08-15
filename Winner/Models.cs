@@ -5,6 +5,20 @@ using System.Linq;
 
 namespace Naver.SearchAd
 {
+    public class ComboItem
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public ComboItem(string key, string value)
+        {
+            Key = key; Value = value;
+        }
+        public override string ToString()
+        {
+            return Value;
+        }
+    }
+
     // 순서 중요함 필드순서 변경하면 안됨
     public class RelKwdStat
     {
@@ -259,20 +273,15 @@ namespace Naver.SearchAd
     public class Slot
     {        
         public string OID { get; set; }
-        public string browser { get; set; }
-        public string agent { get; set; }
-        public string category { get; set; }
-        public string search { get; set; }
-        public string nxSearch { get; set; }
+        public string logicName { get; set; }        
         public string toCount { get; set; }
         public string currCount { get; set; }
-        public string View { get; set; }
-        public string initRank { get; set; }
-        public string currRank { get; set; }
+        public string rank { get; set; }
+        public string description { get; set; }
         public string createdAt { get; set; }
 
-        public static string Values = "'{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}', '{10}', '{11}'";
-        public static string Column = "OID, Category, Search, NxSearch, ToCount, CurrCount, View, InitRank, CurrRank, CreatedAt, Agent, Browser";
+        public static string Values = "'{0}','{1}','{2}','{3}','{4}','{5}','{6}'";
+        public static string Column = "OID, LogicName, CreatedAt, ToCount, CurrCount, Rank, Description";
 
         public static int AGENT_TYPE_PC = 1;
         public static int AGENT_TYPE_MOBILE = 2;

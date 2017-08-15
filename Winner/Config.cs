@@ -49,23 +49,9 @@ namespace Winner
             // 로직아이템 초기화
             InitLogicItem(currentLogicId);
         }
-
-        class ComboItem
-        {
-            public string Key { get; set; }
-            public string Value { get; set; }
-            public ComboItem(string key, string value)
-            {
-                Key = key; Value = value;
-            }
-            public override string ToString()
-            {
-                return Value;
-            }
-        }
-
-            // 로직 콤보박스 초기화
-            private void InitLogic()
+      
+        // 로직 콤보박스 초기화
+        private void InitLogic()
         {
             List<Logic> logics = sqlite.SelectAllLogics();
 
@@ -617,6 +603,40 @@ namespace Winner
             InitLogicInput(currentLogicId);
             // 로직아이템 초기화
             InitLogicItem(currentLogicId);
+        }
+
+        // 그리드 컨택스트 메뉴
+        int contextRowIndex = 0;
+        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStrip m = new ContextMenuStrip();
+
+                var hti = dataGridView1.HitTest(e.X, e.Y);
+                this.contextRowIndex = hti.RowIndex;
+
+                m.Items.Add("Delete").Name = "Delete";                          
+                m.Show(dataGridView1, new Point(e.X, e.Y));
+                m.ItemClicked += new ToolStripItemClickedEventHandler(ContextMenuClick);
+            }
+        }
+
+        private void ContextMenuClick(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+            DataGridViewRow row = dataGridView1.Rows[contextRowIndex];
+            switch (e.ClickedItem.Name.ToString())
+            {
+                
+                case "Delete":
+                {
+                      dataGridView1.Rows.Remove(row);
+                }
+                break;
+            }
+
+            
         }
     }
 }

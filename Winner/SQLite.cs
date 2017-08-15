@@ -241,9 +241,8 @@ namespace Winner
 
         public void InsertSlot(Slot slot)
         {
-            ConnectionToDB();
-            object[] param = { slot.OID, slot.category, slot.search, slot.nxSearch, slot.toCount, slot.currCount, slot.View, slot.initRank, slot.currRank, slot.createdAt, slot.agent, slot.browser};
-            ExecuteSQL(string.Format("insert into Slot values ("+ Slot.Values + ")", param));                
+            ConnectionToDB();            
+            ExecuteSQL(string.Format("insert into Slot values ("+ Slot.Values + ")", CommonUtils.MakeArray(slot)));                
             DisconnectionToDB();
             
         }
@@ -266,10 +265,9 @@ namespace Winner
                     // 100,000 inserts
                     for (var i = 0; i < slots.Count; i++)
                     {
-                        Slot slot = slots.ElementAt(i);
-                        object[] param = { slot.OID, slot.category, slot.search, slot.nxSearch, slot.toCount, slot.currCount, slot.View, slot.initRank, slot.currRank, slot.createdAt, slot.agent, slot.browser };
+                        Slot slot = slots.ElementAt(i);                                                
                         command.CommandText =
-                            string.Format( "insert into  Slot ("+ Slot.Column + ") values ("+ Slot.Values+")", param);
+                            string.Format( "insert into  Slot ("+ Slot.Column + ") values ("+ Slot.Values+")", CommonUtils.MakeArray(slot));
                         command.ExecuteNonQuery();
                     }
 
@@ -327,17 +325,14 @@ namespace Winner
             {
                 Slot slot = new Slot();                
                 slot.OID = (string)reader["OID"];
-                slot.category = (string)reader["Category"];
-                slot.search = (string)reader["Search"];
-                slot.nxSearch = (string)reader["NxSearch"];
+                slot.logicName = (string)reader["LogicName"];
+                slot.createdAt = (string)reader["CreatedAt"];
                 slot.toCount = (string)reader["ToCount"];
                 slot.currCount = (string)reader["CurrCount"];
-                slot.View = (string)reader["View"];
-                slot.initRank = (string)reader["InitRank"];
-                slot.currRank = (string)reader["CurrRank"];
-                slot.createdAt = (string)reader["CreatedAt"];
-                slot.agent = (string)reader["Agent"];
-                slot.browser = (string)reader["Browser"];
+                slot.rank = (string)reader["Rank"];
+                slot.description = (string)reader["Description"];
+
+
 
                 Slots.Add(slot);
                 

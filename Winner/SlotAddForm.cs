@@ -12,8 +12,16 @@ namespace Winner
 {
     public partial class SlotAddForm : Form
     {
+        private string slotNumber;
+
         public SlotAddForm()
         {
+            InitializeComponent();
+        }
+
+        public SlotAddForm(string slotNumber)
+        {
+            this.slotNumber = slotNumber;
             InitializeComponent();
         }
 

@@ -215,11 +215,13 @@ namespace Winner
         // 로직 콤보박스 초기화
         private void InitLogic()
         {
-            List<Logic> logics = sqlLite.SelectAllLogics();
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Items.Add(new ComboItem("MANUAL", "<직접입력>"));
 
+            List<Logic> logics = sqlLite.SelectAllLogics();
             for (int i = 0; i < logics.Count; i++)
             {
-                comboBox1.Items.Add(logics[i].name);
+                comboBox1.Items.Add(new ComboItem(logics[i].id, logics[i].name));
             }
             
             comboBox1.SelectedIndex = 0;
@@ -259,8 +261,8 @@ namespace Winner
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.YellowGreen;            
 
-            string[] headers = new string[] { "슬롯번호","등록일", "목표횟수", "현재횟수", "순위", "메모"};
-            int[] widths = new int[] { 120, 100, 100, 100, 100, -1};            
+            string[] headers = new string[] { "슬롯번호", "로직명", "목표횟수", "현재횟수", "순위", "메모", "등록일"};
+            int[] widths = new int[] { 120, 200, 80, 80, 80, -1, 150};            
 
             dataGridView1.ColumnCount = headers.Length;
 
@@ -404,10 +406,7 @@ namespace Winner
            // slot.search = textBox1.Text;
             //slot.nxSearch = textBox2.Text;
             slot.toCount = "1";
-            slot.currCount = "0";
-            slot.View = "*";
-            slot.initRank = "*";
-            slot.currRank = "*";
+            slot.currCount = "0";            
             slot.createdAt = DateTime.Now.ToString();
             //slot.agent = comboBox3.Text;
             //slot.browser = comboBox4.Text;
@@ -417,6 +416,7 @@ namespace Winner
             sqlLite.InsertSlot(slot);
             LogManager.AppendLog("새로운 슬롯[{0}]이 추가되었습니다.", slot.OID);
         }
+        
         private void AddDataGridRows(List<Slot> slots)
         {
             for( int i = 0; i < slots.Count; i++)
@@ -426,12 +426,8 @@ namespace Winner
         }
 
         private void AddDataGridRow(Slot slot)
-        {
-            string[] row = {  slot.OID.ToString(), slot.browser, slot.agent, slot.category, slot.search, slot.nxSearch,
-                slot.toCount.ToString(), slot.currCount.ToString(),
-                slot.View, slot.initRank, slot.currRank, slot.createdAt};
-
-            dataGridView1.Rows.Add(row);
+        {            
+            dataGridView1.Rows.Add(CommonUtils.MakeArray(slot));
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -444,23 +440,7 @@ namespace Winner
 
         }
 
-        // 선택 삭제
-        private void button5_click(object sender, EventArgs e)
-        {
-            
-            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
-            {                
-                string SlotNumber = (string)row.Cells[HEADER_SLOT].Value;
-                if (SlotNumber == null || SlotNumber.Length == 0)
-                {
-                    continue;
-                }
-
-                dataGridView1.Rows.Remove(row);
-                LogManager.AppendLog("슬롯[{0}]이 삭제되었습니다.", SlotNumber);
-            }            
-        }
-
+   
         private void Column1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -524,18 +504,10 @@ namespace Winner
             {                                
                 DataGridViewRow row = rows[i];
                 Slot slot = new Slot();
-                slot.OID =  (string) row.Cells[ HEADER_SLOT].Value; 
-                slot.category = (string) row.Cells[ HEADER_CATEGORY].Value;
-                slot.search = (string)row.Cells[HEADER_SEARCH].Value;
-                slot.nxSearch = (string)row.Cells[HEADER_NXSEARCH].Value;
+                slot.OID =  (string) row.Cells[ HEADER_SLOT].Value;                 
                 slot.toCount =  (string)row.Cells[HEADER_TO_COUNT].Value;
-                slot.currCount = (string)row.Cells[HEADER_CURR_COUNT].Value;
-                slot.View = (string)row.Cells[HEADER_VIEW].Value;
-                slot.initRank = (string)row.Cells[HEADER_INIT_RANK].Value;
-                slot.currRank = (string)row.Cells[HEADER_CURR_RANK].Value;
-                slot.createdAt = (string)row.Cells[HEADER_CREATED_AT].Value;
-                slot.agent = (string)row.Cells[HEADER_AGENT].Value;
-                slot.browser = (string)row.Cells[HEADER_BROWSER].Value;
+                slot.currCount = (string)row.Cells[HEADER_CURR_COUNT].Value;                
+                slot.createdAt = (string)row.Cells[HEADER_CREATED_AT].Value;                
 
                 Slots.Add(slot);
             }
@@ -691,11 +663,66 @@ namespace Winner
             MdiChild.ShowDialog();
         }
 
-        // 추가
+        // 슬롯 추가
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            SlotAddForm MdiChild = new SlotAddForm();
-            MdiChild.ShowDialog();
+            ComboItem item = comboBox1.SelectedItem as ComboItem;
+            ;
+
+            if (item.Key.Equals("MANUAL"))
+            {
+                SlotAddForm MdiChild = new SlotAddForm();
+                MdiChild.ShowDialog();
+            }
+            else
+            {                            
+                Slot slot = new Slot();
+                slot.OID = DateUtils.GetCurrentTimeStamp().ToString();
+                slot.logicName = comboBox1.Text;
+                slot.rank = "*";
+                slot.toCount = "1";
+                slot.currCount = "0";
+                //slot.description = "";
+                slot.createdAt = DateTime.Now.ToString();
+                AddDataGridRow(slot);
+            }            
+        }
+
+        // 슬롯 삭제
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                string SlotNumber = (string)row.Cells[HEADER_SLOT].Value;
+                if (SlotNumber == null || SlotNumber.Length == 0)
+                {
+                    continue;
+                }
+
+                dataGridView1.Rows.Remove(row);
+                LogManager.AppendLog("슬롯[{0}]이 삭제되었습니다.", SlotNumber);
+            }
+        }
+
+        // 슬롯 수정
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("선택된 슬롯이 없습니다.");
+            }
+            else if (dataGridView1.SelectedRows.Count > 1)
+            {
+                MessageBox.Show("수정은 하나의 슬롯만 선택하여 할 수 있습니다.");
+            }
+            else
+            {
+                DataGridViewRow row = dataGridView1.SelectedRows[0];
+                string SlotNumber = (string)row.Cells[HEADER_SLOT].Value;
+
+                SlotAddForm MdiChild = new SlotAddForm(SlotNumber);
+                MdiChild.ShowDialog();
+            }
         }
     }
 }

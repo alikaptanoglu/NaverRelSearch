@@ -21,6 +21,8 @@ namespace Winner
     class CommonUtils
     {
         public static char[] delimiterChars = { ' ', ',', '.', ':', '\t', '/' };
+        public static char[] delimiterComma = { ','};
+        public static char[] delimiterSlash = { '/' };
 
         public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
         {

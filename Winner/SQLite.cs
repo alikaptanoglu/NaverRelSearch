@@ -10,8 +10,7 @@ using Naver.SearchAd;
 namespace Winner
 {
     public class SQLite
-    {
-        private SQLiteConnection dbConnection;
+    {        
         private const String DbFile = "NaverRelateSearch.sqlite";
         private static SQLite sqLite = new SQLite();
         
@@ -28,12 +27,23 @@ namespace Winner
             }
         }
 
+        internal Slot SelectSlotBySlotId(string slotId)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where oid = '{2}'", Slot.Column, Slot.TableName, slotId), conn);
+            List<Slot> slots = Slot.MakeResultSet(reader);
+
+            DisconnectionToDB(conn);
+            return slots[0];
+        }
+
         internal List<Configuration> SelectAllConfigurationByOwner(string owner)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
             List<Configuration> Configs = new List<Configuration>();
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from Configuration where owner = '{1}'", Configuration.Column, owner));
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from Configuration where owner = '{1}'", Configuration.Column, owner), conn);
 
             int index = 0;
             while (reader.Read())
@@ -48,61 +58,78 @@ namespace Winner
                 index = 0;
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
 
             return Configs;
         }
 
         internal List<LogicItem> SelectAllLogicItemsByLogicId(string id)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = {2} order by sequence asc", LogicItem.Column, LogicItem.TableName, id));
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = '{2}' order by sequence asc", LogicItem.Column, LogicItem.TableName, id), conn);
             List<LogicItem> logicItems = LogicItem.MakeResultSet(reader);
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
 
             return logicItems;
         }
 
         internal List<LogicInput> SelectAllLogicInputsByLogicId(string id)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = {2}", LogicInput.Column, LogicInput.TableName, id));
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = '{2}'", LogicInput.Column, LogicInput.TableName, id), conn);
             List<LogicInput> logicInputs = LogicInput.MakeResultSet(reader);
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
 
             return logicInputs;
         }
 
+        internal List<LogicItem> SelectAllLogicItemsBySlotId(string slotId)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} l, {2} s where  l.logicid = s.logicid and s.oid = '{3}' order by sequence asc;", LogicItem.GetPrepixColumn("l"), LogicItem.TableName, Slot.TableName, slotId), conn);
+            List<LogicItem> logicItems = LogicItem.MakeResultSet(reader);
+
+            DisconnectionToDB( conn);
+
+            return logicItems;
+        }
+
+        private void DisconnectionToDB(SQLiteConnection conn)
+        {
+            if (conn != null)
+            {
+                conn.Close();
+            }
+        }
+
         internal List<RankingModel> SelectAllRanking()
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
             
-            SQLiteDataReader reader = SelectExecuteSQL( string.Format("select * from ranking", RankingModel.Column));
+            SQLiteDataReader reader = SelectExecuteSQL( string.Format("select * from ranking", RankingModel.Column), conn);
             List <RankingModel> rankings = RankingModel.MakeResultSet(reader);
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
             return rankings;
         }
 
-        public void ConnectionToDB()
-        {
-            if (dbConnection == null)
-            {
-                dbConnection = new SQLiteConnection(string.Format("Data Source={0};Version=3;", DbFile));
-            }
-            
+        public SQLiteConnection ConnectionToDB()
+        {            
+            SQLiteConnection dbConnection = new SQLiteConnection(string.Format("Data Source={0};Version=3;Pooling=False;Max Pool Size=100;", DbFile));
             dbConnection.Open();
+            return dbConnection;            
         }
 
         public bool ExistAccount(string account, string password)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select * from account where account = '{0}' and password = '{1}'", account, password));
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select * from account where account = '{0}' and password = '{1}'", account, password), conn);
 
             int count = 0;
             while (reader.Read())
@@ -110,41 +137,34 @@ namespace Winner
                 count++;
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
 
             return count > 0 ? true : false;
         }
 
-        private SQLiteDataReader SelectExecuteSQL(string sql)
+        private SQLiteDataReader SelectExecuteSQL(string sql, SQLiteConnection conn)
         {
-            SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
             return command.ExecuteReader();
         }
 
-        public void DisconnectionToDB()
-        {
-            if (dbConnection != null)
-            {
-                dbConnection.Close();
-            }
-        }
 
         public void CreateTable(string tableName = null)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            ExecuteSQL("create table if not exists Configuration (key varchar(256), value varchar(4000))");
+            ExecuteSQL("create table if not exists Configuration (key varchar(256), value varchar(4000))", conn);
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
         public void InsetAllConfiguration(List<Configuration> configs)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            using (var command = new SQLiteCommand(dbConnection))
+            using (var command = new SQLiteCommand(conn))
             {
-                using (var transaction = dbConnection.BeginTransaction())
+                using (var transaction = conn.BeginTransaction())
                 {
                     // 100,000 inserts                
                     for (var i = 0; i < configs.Count; i++)
@@ -161,23 +181,23 @@ namespace Winner
                 }
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
         internal void DeleteLogicInputByLogicId(string logicId)
         {
-            ConnectionToDB();
-            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicInput.TableName, logicId));
-            DisconnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicInput.TableName, logicId), conn);
+            DisconnectionToDB(conn);
         }
 
         internal void InsertAllLogicInpts(List<LogicInput> logicInputs)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            using (var command = new SQLiteCommand(dbConnection))
+            using (var command = new SQLiteCommand(conn))
             {
-                using (var transaction = dbConnection.BeginTransaction())
+                using (var transaction = conn.BeginTransaction())
                 {
                     // 100,000 inserts                
                     for (var i = 0; i < logicInputs.Count; i++)
@@ -192,16 +212,16 @@ namespace Winner
                 }
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
         internal void InsertAllLogicItems(List<LogicItem> logicItems)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            using (var command = new SQLiteCommand(dbConnection))
+            using (var command = new SQLiteCommand(conn))
             {
-                using (var transaction = dbConnection.BeginTransaction())
+                using (var transaction = conn.BeginTransaction())
                 {
                     // 100,000 inserts                
                     for (var i = 0; i < logicItems.Count; i++)
@@ -216,51 +236,51 @@ namespace Winner
                 }
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
-        internal void DeleteAllLogicItems(string logicId)
+        internal void DeleteLogicItemByLogicId(string logicId)
         {
-            ConnectionToDB();
-            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicItem.TableName, logicId));
-            DisconnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where LogicId = '{1}'", LogicItem.TableName, logicId), conn);
+            DisconnectionToDB(conn);
         }
 
         public void DeleteAllConfigurationByOwner(string owner)
         {
-            ConnectionToDB();
-            ExecuteSQL(string.Format("delete from Configuration where Owner = '{0}'", owner));
-            DisconnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("delete from Configuration where Owner = '{0}'", owner), conn);
+            DisconnectionToDB(conn);
         }
 
-        public void ExecuteSQL( string sql)
+        public void ExecuteSQL( string sql, SQLiteConnection conn)
         {
-            SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
             command.ExecuteNonQuery();
         }
 
         public void InsertSlot(Slot slot)
         {
-            ConnectionToDB();            
-            ExecuteSQL(string.Format("insert into Slot values ("+ Slot.Values + ")", CommonUtils.MakeArray(slot)));                
-            DisconnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();            
+            ExecuteSQL(string.Format("insert into Slot (" + Slot.Column + ") values ("+ Slot.Values + ")", CommonUtils.MakeArray(slot)), conn);                
+            DisconnectionToDB(conn);
             
         }
 
         public void DeleteAllTables( string tableName)
         {
-            ConnectionToDB();
-            ExecuteSQL( string.Format("delete from {0}", tableName));
-            DisconnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL( string.Format("delete from {0}", tableName), conn);
+            DisconnectionToDB(conn);
         }
 
         public void InsertAllSlots(List<Slot> slots)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            using (var command = new SQLiteCommand(dbConnection))
+            using (var command = new SQLiteCommand(conn))
             {
-                using (var transaction = dbConnection.BeginTransaction())
+                using (var transaction = conn.BeginTransaction())
                 {
                     // 100,000 inserts
                     for (var i = 0; i < slots.Count; i++)
@@ -275,16 +295,16 @@ namespace Winner
                 }
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
         public void InsertAllRankings(List<RankingModel> rankingModels)
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            using (var command = new SQLiteCommand(dbConnection))
+            using (var command = new SQLiteCommand(conn))
             {
-                using (var transaction = dbConnection.BeginTransaction())
+                using (var transaction = conn.BeginTransaction())
                 {
                     // 100,000 inserts
                     for (var i = 0; i < rankingModels.Count; i++)
@@ -300,25 +320,36 @@ namespace Winner
                 }
             }
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
         }
 
         public List<Logic> SelectAllLogics()
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select * from " + Logic.TableName, Logic.Column));
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} order by createdAt asc",Logic.Column, Logic.TableName), conn);
             List<Logic> logics = Logic.MakeResultSet(reader);
 
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
+            return logics;
+        }
+
+        public List<Logic> SelectLogicByType( string type)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where type = '{2}' order by createdAt asc", Logic.Column, Logic.TableName, type), conn);
+            List<Logic> logics = Logic.MakeResultSet(reader);
+
+            DisconnectionToDB(conn);
             return logics;
         }
 
         public List<Slot> SelectAllSlots()
         {
-            ConnectionToDB();
+            SQLiteConnection conn = ConnectionToDB();
             List<Slot> Slots = new List<Slot>();
-            SQLiteDataReader reader = SelectExecuteSQL( string.Format( "select {0} from slot", Slot.Column));
+            SQLiteDataReader reader = SelectExecuteSQL( string.Format( "select {0} from slot", Slot.Column), conn);
 
             
             while( reader.Read())
@@ -332,15 +363,53 @@ namespace Winner
                 slot.rank = (string)reader["Rank"];
                 slot.description = (string)reader["Description"];
 
-
-
                 Slots.Add(slot);
                 
             }
             
-            DisconnectionToDB();
+            DisconnectionToDB(conn);
 
             return Slots;
         }
+        
+        internal void InsertLogic(Logic logic)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("insert into "+ Logic.TableName + " values (" + Logic.Values + ")", CommonUtils.MakeArray( logic)), conn);
+            DisconnectionToDB(conn);
+        }
+
+        internal void DeleteLogicByLogicId(string logicId)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where id = '{1}'", Logic.TableName, logicId), conn);
+            DisconnectionToDB(conn);
+        }
+
+        internal void DeleteSlot(string slotId)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("delete from {0} where oid = '{1}'", Slot.TableName, slotId), conn);
+            DisconnectionToDB(conn);
+        }
+
+        internal Logic SelectLogicById(string id)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where id = '{2}'", Logic.Column, Logic.TableName, id), conn);
+            List<Logic> logics = Logic.MakeResultSet(reader);
+
+            DisconnectionToDB(conn);
+            return logics[0];
+        }
+
+        internal void UpdateSlot(Slot slot)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("update Slot Set logicName = '{0}', ToCount = '{1}', Description = '{2}' where oid = '{3}'", slot.logicName, slot.toCount, slot.description, slot.OID), conn);
+            DisconnectionToDB(conn);
+        }
     }
 }
+

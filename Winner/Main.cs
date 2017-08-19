@@ -24,35 +24,34 @@ namespace Winner
     
     public partial class Main : Form
     {
+      
+
         private Browser Browser;
         private  LogManager LogManager;
 
         private Thread naverAdThread;
         private Thread browserThread;
         private Thread keyWordThread;
+        private WorkerManager workerManager;
 
         private SQLite sqlLite;
 
         private SearchAdApi restApi = new SearchAdApi();
 
         public static int HEADER_SLOT = 0;
-        public static int HEADER_BROWSER = 1;
-        public static int HEADER_AGENT = 2;
-        public static int HEADER_CATEGORY = 3;
-        public static int HEADER_SEARCH = 4;
-        public static int HEADER_NXSEARCH = 5;
-        public static int HEADER_TO_COUNT = 6;
-        public static int HEADER_CURR_COUNT = 7;
-        public static int HEADER_VIEW = 8;
-        public static int HEADER_INIT_RANK = 9;
-        public static int HEADER_CURR_RANK = 10;
-        public static int HEADER_CREATED_AT = 11;
+        public static int HEADER_LOGIC_NAME = 1;               
+        public static int HEADER_TO_COUNT = 2;
+        public static int HEADER_CURR_COUNT = 3;
+        public static int HEADER_RANK = 4;
+        public static int HEADER_DESCRIPTION = 5;       
+        public static int HEADER_CREATED_AT = 6;
        
         bool isLoginSuccess = false;
 
 
         public Main()
         {
+
             InitializeComponent();
         }
 
@@ -85,9 +84,15 @@ namespace Winner
             // 주기적인작업 설정
             SetIntervalWork();
 
+            
+
             // 로그 초기화
             LogManager = new LogManager();
             LogManager.SetUp(textBox3);
+
+            // 워커 초기화
+            workerManager = new WorkerManager(this);
+            workerManager.SetLogManager(LogManager);
 
             // 브라우저 초기화
             Browser = new ChromeBrowser();
@@ -129,68 +134,68 @@ namespace Winner
             toolStripStatusLabel3.Text = DateTime.Now.ToString();
         }
 
-        public void NaverAdThread()
-        {
-            var baseUrl = Properties.Settings.Default.BASE_URL;
-            var apiKey = Properties.Settings.Default.API_KEY;
-            var secretKey = Properties.Settings.Default.SECRET_KEY;
-            var managerCustomerId = long.Parse(Properties.Settings.Default.CUSTOMER_ID);
-            var rest = new SearchAdApi();
+        //public void NaverAdThread()
+        //{
+        //    var baseUrl = Properties.Settings.Default.BASE_URL;
+        //    var apiKey = Properties.Settings.Default.API_KEY;
+        //    var secretKey = Properties.Settings.Default.SECRET_KEY;
+        //    var managerCustomerId = long.Parse(Properties.Settings.Default.CUSTOMER_ID);
+        //    var rest = new SearchAdApi();
 
-            while (true)
-            {               
-                if (dataGridView1.Rows.Count == 0)
-                {
-                    Thread.Sleep(5000);
-                    continue;
-                }
+        //    while (true)
+        //    {               
+        //        if (dataGridView1.Rows.Count == 0)
+        //        {
+        //            Thread.Sleep(5000);
+        //            continue;
+        //        }
 
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    if ( dataGridView1.Rows[i].Cells[ Main.HEADER_SLOT].Value == null)
-                    {
-                        continue;
-                    }
+        //        for (int i = 0; i < dataGridView1.Rows.Count; i++)
+        //        {
+        //            if ( dataGridView1.Rows[i].Cells[ Main.HEADER_SLOT].Value == null)
+        //            {
+        //                continue;
+        //            }
 
-                    try
-                    {
-                        var request = new RestRequest("/keywordstool", Method.GET);
-                        request.AddQueryParameter("hintKeywords", (string)dataGridView1.Rows[i].Cells[HEADER_SEARCH].Value);
-                        request.AddQueryParameter("showDetail", "1");
-                        List<RelKwdStat> relKwdStats = rest.Execute<RelKwdStat>(request, "keywordList");
+        //            try
+        //            {
+        //                var request = new RestRequest("/keywordstool", Method.GET);
+        //                request.AddQueryParameter("hintKeywords", (string)dataGridView1.Rows[i].Cells[HEADER_SEARCH].Value);
+        //                request.AddQueryParameter("showDetail", "1");
+        //                List<RelKwdStat> relKwdStats = rest.Execute<RelKwdStat>(request, "keywordList");
 
-                        if (relKwdStats != null)
-                        {
-                            RelKwdStat relKwdStat = relKwdStats.First();
+        //                if (relKwdStats != null)
+        //                {
+        //                    RelKwdStat relKwdStat = relKwdStats.First();
 
-                            // 조회수
-                            dataGridView1.Rows[i].Cells[Main.HEADER_VIEW].Value = relKwdStat.monthlyPcQcCnt + "/" + relKwdStat.monthlyMobileQcCnt;
-                        }
+        //                    // 조회수
+        //                    dataGridView1.Rows[i].Cells[Main.HEADER_VIEW].Value = relKwdStat.monthlyPcQcCnt + "/" + relKwdStat.monthlyMobileQcCnt;
+        //                }
                                                 
-                        Thread.Sleep(50);
-                    }
-                    catch(Exception e)
-                    {
-                        // 쓰레드가 동작 중인 상태에서 Row가 삭제될 경우 익셉션 발생.
-                    }
-                }                
-            }        
-        }
+        //                Thread.Sleep(50);
+        //            }
+        //            catch(Exception e)
+        //            {
+        //                // 쓰레드가 동작 중인 상태에서 Row가 삭제될 경우 익셉션 발생.
+        //            }
+        //        }                
+        //    }        
+        //}
 
-        internal void SetSearchRank(DataGridViewRow row ,int rank)
-        {
-            LogManager.AppendLog("랭크 계산 작업을 수행합니다.");
-            string rankStr = rank == -1 ? "*" : rank.ToString();
+        //internal void SetSearchRank(DataGridViewRow row ,int rank)
+        //{
+        //    LogManager.AppendLog("랭크 계산 작업을 수행합니다.");
+        //    string rankStr = rank == -1 ? "*" : rank.ToString();
 
-            if (row.Cells[Main.HEADER_INIT_RANK].Value.Equals("*"))
-            {
-                row.Cells[Main.HEADER_INIT_RANK].Value = rankStr;
-            }
-            else
-            {
-                row.Cells[Main.HEADER_CURR_RANK].Value = rankStr;
-            }
-        }
+        //    if (row.Cells[Main.HEADER_INIT_RANK].Value.Equals("*"))
+        //    {
+        //        row.Cells[Main.HEADER_INIT_RANK].Value = rankStr;
+        //    }
+        //    else
+        //    {
+        //        row.Cells[Main.HEADER_CURR_RANK].Value = rankStr;
+        //    }
+        //}
 
         private void CommonInit()
         {
@@ -213,12 +218,14 @@ namespace Winner
         }
 
         // 로직 콤보박스 초기화
-        private void InitLogic()
+        public void InitLogic()
         {
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.Items.Add(new ComboItem("MANUAL", "<직접입력>"));
+            comboBox1.Items.Clear();
 
-            List<Logic> logics = sqlLite.SelectAllLogics();
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Items.Add(new ComboItem("MANUAL", "<수동입력>"));
+
+            List<Logic> logics = sqlLite.SelectLogicByType(Logic.CONST_TYPE_CONFIG);
             for (int i = 0; i < logics.Count; i++)
             {
                 comboBox1.Items.Add(new ComboItem(logics[i].id, logics[i].name));
@@ -264,16 +271,17 @@ namespace Winner
             string[] headers = new string[] { "슬롯번호", "로직명", "목표횟수", "현재횟수", "순위", "메모", "등록일"};
             int[] widths = new int[] { 120, 200, 80, 80, 80, -1, 150};            
 
+
             dataGridView1.ColumnCount = headers.Length;
 
             for ( int i = 0; i < headers.Length; i++)
             {
                 dataGridView1.Columns[i].Name =  headers[i];
 
-                //if (!headers[i].Equals("목표횟수"))
-                //{
-                //    dataGridView1.Columns[i].ReadOnly = true;                    
-                //}
+                if (i == HEADER_SLOT || i == HEADER_CURR_COUNT || i == HEADER_RANK || i == HEADER_CREATED_AT)
+                {
+                    dataGridView1.Columns[i].ReadOnly = true;                    
+                }
 
                 if (widths[i] == -1)
                 {
@@ -292,32 +300,23 @@ namespace Winner
         {
             row.Cells[Main.HEADER_CURR_COUNT].Value = (int.Parse((string)row.Cells[Main.HEADER_CURR_COUNT].Value) + 1).ToString();
         }
-      
+
         //  작업 실행
+        bool isStart = false;
         private void StartStopWorkBtn(object sender, EventArgs e)
         {
-            if (browserThread == null || !browserThread.IsAlive)
+            if (!isStart)
             {
-                if (!(dataGridView1.Rows.Count == 0) && isRemainTask())
-                {
-                    browserThread = new Thread(new ThreadStart(Browser.run));
-                    browserThread.Start();
-                    toolStripStatusLabel2.Text = "정상적으로 실행중입니다.";
-                    EnableWorkBtn(false, "실행 중");
-                }
-                else
-                {
-                    MessageBox.Show("남아있는 작업이 없습니다. 슬롯을 추가해 주세요.", "경고");
-                }
-                
+                isStart = true;
+                pictureBox7.BackgroundImage = Winner.Properties.Resources.stop;
+                workerManager.Start();
             }
             else
             {
-                
-                browserThread.Abort();
-                toolStripStatusLabel2.Text = "정지";
-                
-            }                        
+                isStart = false;
+                pictureBox7.BackgroundImage = Winner.Properties.Resources.start;
+                workerManager.Stop();
+            }
         }
 
         // 작업버튼 활성화 여부
@@ -342,21 +341,21 @@ namespace Winner
         public bool isRemainTask()
         {
 
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {                
+                //for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                //{                
 
-                    DataGridViewRow row = dataGridView1.Rows[i];                
+                //    DataGridViewRow row = dataGridView1.Rows[i];                
 
-                    if (((string)row.Cells[ HEADER_SEARCH].Value).Length == 0)
-                    {
-                        continue;
-                    }
+                //    if (((string)row.Cells[ HEADER_SEARCH].Value).Length == 0)
+                //    {
+                //        continue;
+                //    }
 
-                    if (int.Parse((string)row.Cells[ HEADER_TO_COUNT].Value) > int.Parse((string)row.Cells[ HEADER_CURR_COUNT].Value))
-                    {
-                        return true;
-                    }
-                }
+                //    if (int.Parse((string)row.Cells[ HEADER_TO_COUNT].Value) > int.Parse((string)row.Cells[ HEADER_CURR_COUNT].Value))
+                //    {
+                //        return true;
+                //    }
+                //}
           
             return false;
 
@@ -475,7 +474,7 @@ namespace Winner
         // 환경설정 
         private void ClickConfiguration(object sender, EventArgs e)
         {
-            Config MdiChild = new Config();            
+            Config MdiChild = new Config( this);            
             MdiChild.ShowDialog();
         }
 
@@ -574,11 +573,7 @@ namespace Winner
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            SlotAddForm MdiChild = new SlotAddForm();
-            MdiChild.ShowDialog();
-        }
+       
 
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
@@ -666,26 +661,80 @@ namespace Winner
         // 슬롯 추가
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            ComboItem item = comboBox1.SelectedItem as ComboItem;
-            ;
+            ComboItem item = comboBox1.SelectedItem as ComboItem;           
 
             if (item.Key.Equals("MANUAL"))
             {
-                SlotAddForm MdiChild = new SlotAddForm();
+                SlotAdd MdiChild = new SlotAdd( SlotAddCallback);
                 MdiChild.ShowDialog();
             }
             else
-            {                            
+            {                                            
                 Slot slot = new Slot();
                 slot.OID = DateUtils.GetCurrentTimeStamp().ToString();
                 slot.logicName = comboBox1.Text;
                 slot.rank = "*";
                 slot.toCount = "1";
                 slot.currCount = "0";
+
+                
+                slot.logicId = CopyLogic( item.Key);
                 //slot.description = "";
                 slot.createdAt = DateTime.Now.ToString();
                 AddDataGridRow(slot);
-            }            
+
+                sqlLite.InsertSlot(slot);
+            }
+            
+        }
+
+        private string CopyLogic(string id)
+        {
+            Logic logic = sqlLite.SelectLogicById(id);
+
+            // 로직저장
+            Logic copyLogic = new Logic();
+            copyLogic.id = DateUtils.GetCurrentTimeStamp().ToString();
+            copyLogic.name = logic.name;
+            copyLogic.type = Logic.CONST_TYPE_MANUAL;
+            copyLogic.createdAt = DateTime.Now.ToString();
+
+            sqlLite.InsertLogic(copyLogic);
+                        
+            List<LogicItem> logicItems =  sqlLite.SelectAllLogicItemsByLogicId(id);
+            foreach (LogicItem item in logicItems)
+            {
+                item.logicId = copyLogic.id;
+            }           
+            sqlLite.InsertAllLogicItems(logicItems);
+
+            List<LogicInput> logicInputs = sqlLite.SelectAllLogicInputsByLogicId(id);
+            foreach(LogicInput item in logicInputs)
+            {
+                item.logicId = copyLogic.id;
+            }
+            sqlLite.InsertAllLogicInpts(logicInputs);
+
+            return copyLogic.id;
+        }
+
+
+
+        // 슬롯 추가 콜백
+        private void SlotAddCallback(string logicId)
+        {
+            Slot slot = new Slot();
+            slot.OID = DateUtils.GetCurrentTimeStamp().ToString();
+            slot.logicName = comboBox1.Text;
+            slot.rank = "*";
+            slot.toCount = "1";
+            slot.currCount = "0";
+            slot.logicId = logicId;
+            //slot.description = "";
+            slot.createdAt = DateTime.Now.ToString();
+            AddDataGridRow(slot);
+
+            sqlLite.InsertSlot(slot);
         }
 
         // 슬롯 삭제
@@ -701,6 +750,8 @@ namespace Winner
 
                 dataGridView1.Rows.Remove(row);
                 LogManager.AppendLog("슬롯[{0}]이 삭제되었습니다.", SlotNumber);
+
+                sqlLite.DeleteSlot( SlotNumber);
             }
         }
 
@@ -720,10 +771,31 @@ namespace Winner
                 DataGridViewRow row = dataGridView1.SelectedRows[0];
                 string SlotNumber = (string)row.Cells[HEADER_SLOT].Value;
 
-                SlotAddForm MdiChild = new SlotAddForm(SlotNumber);
+                SlotUpdate MdiChild = new SlotUpdate(SlotNumber);
                 MdiChild.ShowDialog();
             }
         }
+
+        // 셀의 값이 변경되었을 때 슷롯 저장
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+            string slotId = (string)row.Cells[HEADER_SLOT].Value;
+            Slot slot = sqlLite.SelectSlotBySlotId(slotId);
+                        
+            slot.logicName = (string)row.Cells[HEADER_LOGIC_NAME].Value; ;
+            slot.description = (string)row.Cells[HEADER_DESCRIPTION].Value; ;
+            slot.toCount = (string)row.Cells[HEADER_TO_COUNT].Value;
+            
+            sqlLite.UpdateSlot(slot);
+        }
+
+        // 그리드의 모든 로우 반환
+        public DataGridViewRowCollection GetDataGridViewRows()
+        {
+            return dataGridView1.Rows;
+        }        
     }
 }
 

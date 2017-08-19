@@ -62,7 +62,7 @@ namespace BrowserCollection
             private SQLite sqlite;
             private int agentType;
 
-            int[] tabArray = new int[] { (int)NaverTab.Cafe, (int)NaverTab.Knowledge, (int)NaverTab.Movie, (int)NaverTab.Blog, (int)NaverTab.Image, (int)NaverTab.Search, (int)NaverTab.News };
+            
 
 
             delegate void StartBrowserCallback();
@@ -97,7 +97,7 @@ namespace BrowserCollection
                 DataGridViewRow row = rows[CommonUtils.GetRandomValue(0, rows.Count)];                
                 DataGridViewCellCollection cells = row.Cells;
 
-                SetAgentType(getCellValue(cells, Main.HEADER_AGENT));
+                //SetAgentType(getCellValue(cells, Main.HEADER_AGENT));
 
                 if (!form.isRemainTask())
                 {
@@ -117,8 +117,8 @@ namespace BrowserCollection
 
                 Dictionary<string, string> dictionary = Configuration.ConvertObjectToMap(Configs);
 
-                string searchText = getCellValue(cells, Main.HEADER_SEARCH);
-                string nxSearchText = getCellValue(cells, Main.HEADER_NXSEARCH);
+              //  string searchText = getCellValue(cells, Main.HEADER_SEARCH);
+             //   string nxSearchText = getCellValue(cells, Main.HEADER_NXSEARCH);
 
                 try
                 {
@@ -127,10 +127,10 @@ namespace BrowserCollection
                     form.BeginInvoke(new Action(() => { form.ChangeRowColor(row, Color.LawnGreen); }));
 
                     // 브라우저 시작
-                    StartBrowser( dictionary, getCellValue(cells, Main.HEADER_BROWSER));                    
+                  //  StartBrowser( dictionary, getCellValue(cells, Main.HEADER_BROWSER));                    
 
                     // 검색어 입력
-                    SetSearchText("#query", searchText, false);
+                    //SetSearchText("#query", searchText, false);
 
                     // 검색전 체류
                     Stay("1차 검색 전", dictionary[Configuration.COMMON_PRE_SEARCH_STAY]);
@@ -146,7 +146,7 @@ namespace BrowserCollection
                     }
 
                     // 랭크 처리
-                    form.SetSearchRank(row, FindSearchRank(nxSearchText));
+                 //   form.SetSearchRank(row, FindSearchRank(nxSearchText));
 
                     // 검색 후 체류
                     Stay("1차 검색 후", dictionary[Configuration.COMMON_SEARCH_STAY]);
@@ -155,13 +155,13 @@ namespace BrowserCollection
                     ScrollBy(dictionary);
 
                     // 카테고리 이동            
-                    int index = MoveTab( getCellValue(cells, Main.HEADER_CATEGORY));
+                 //   int index = MoveTab( getCellValue(cells, Main.HEADER_CATEGORY));
 
                     // 카테고리 이동 후 체류
                     Stay("카테고리 이동 후", dictionary[Configuration.COMMON_SEARCH_STAY]);
 
                     // 2차 검색어 입력
-                    SetSearchText("#nx_query", nxSearchText, true);
+                 //   SetSearchText("#nx_query", nxSearchText, true);
 
                     // 검색전 체류
                     Stay("2차 검색 전", dictionary[Configuration.COMMON_PRE_SEARCH_STAY]);
@@ -186,17 +186,17 @@ namespace BrowserCollection
                         ScrollBy(dictionary);
 
                         // 게시물 조회
-                        bool isViewSuccess = PostViewBy(index, null, 1500, true);
+                      //  bool isViewSuccess = PostViewBy(index, null, 1500, true);
 
                         // 게시물 조회 성공
-                        if (isViewSuccess)
-                        {
+                       // if (isViewSuccess)
+                       // {
                             // 스크롤 처리           
-                            ScrollBy(dictionary);
+                        //    ScrollBy(dictionary);
 
                             // 최초방문페이지 체류
                             Stay("최초 페이지 방문 후", dictionary[Configuration.COMMON_INIT_PAGE_STAY]);
-                        }                  
+                     //   }                  
 
                         // 이전 히스토리 이동
                         HistoryBack();
@@ -471,46 +471,7 @@ namespace BrowserCollection
             jse.ExecuteScript("window.history.go(-1)", "");
         }
    
-        // Text를 통해서 카테고리의 인덱스를 조회
-        private int convertStringToTabIndex(string value)
-        {
-            int selectIndex = -1;
-
-            if (value.Equals("통합검색"))
-            {
-                selectIndex = (int)NaverTab.Search;
-            }
-            else if (value.Equals("이미지"))
-            {
-                selectIndex = (int)NaverTab.Image;
-            }
-            else if (value.Equals("블로그"))
-            {
-                selectIndex = (int)NaverTab.Blog;
-            }
-            else if (value.Equals("동영상"))
-            {
-                selectIndex = (int)NaverTab.Movie;
-            }
-            else if (value.Equals("지식IN"))
-            {
-                selectIndex = (int)NaverTab.Knowledge;
-            }
-            else if (value.Equals("카페"))
-            {
-                selectIndex = (int)NaverTab.Cafe;
-            }
-            else if (value.Equals("뉴스"))
-            {
-                selectIndex = (int)NaverTab.News;
-            }
-            else if (value.Equals("랜덤"))
-            {
-                selectIndex = new Random().Next(0, tabArray.Length - 1);
-            }
-            
-            return selectIndex;
-        }
+      
 
         private T RandomEnum<T>()
         {
@@ -523,7 +484,7 @@ namespace BrowserCollection
         {
             int index = 0;
             IWebElement element = null;
-            index = convertStringToTabIndex(category);
+           // index = convertStringToTabIndex(category);
 
             if (agentType == Slot.AGENT_TYPE_PC)
             {                
@@ -670,8 +631,7 @@ namespace BrowserCollection
                         continue;
                     }                    
                 }                           
-            }
-            
+            }            
         }
 
         // 스크롤 Down

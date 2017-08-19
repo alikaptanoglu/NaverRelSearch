@@ -11,97 +11,48 @@ using System.Windows.Forms;
 
 namespace Winner
 {
-    public partial class Config : Form
+    public partial class SlotUpdate : Form
     {
+        
         SQLite sqlite;
 
         // 현재 로직 아이디
         string currentLogicId;
-        private Main UI;
+        private string slotId;
 
         delegate void MousePostionCheckerCallBack(object sender, System.Timers.ElapsedEventArgs e);
-        
-        public Config()
+
+        public SlotUpdate()
         {
             InitializeComponent();
         }
 
-        public Config(Main UI)
+        public SlotUpdate(string slotId)
         {
-            this.UI = UI;
+            this.slotId = slotId;
             InitializeComponent();
-            
         }
 
-        private void Form2_Load(object sender, EventArgs e)
+
+        private void SlotUpdate_Load(object sender, EventArgs e)
         {
             sqlite = SQLite.GetInstance();
+
+            Slot slot = sqlite.SelectSlotBySlotId(slotId);
+
+            currentLogicId = slot.logicId;
 
             // 테이블 헤더 설정
             SetupDataGridVIew();
 
-            // 초기 설정 세팅
-            SetInitConfiguration();
-
             // 공통초기화
             CommonInit();
+            
+            // 로직입력값 초기화
+            InitLogicInput(currentLogicId);
 
-        }
-
-        private void SetInitConfiguration()
-        {
-            List<Configuration> configs = sqlite.SelectAllConfigurationByOwner(Configuration.Default);
-
-            for (int i = 0; i < configs.Count; i++)
-            {
-                Configuration config = configs.ElementAt(i);
-                SetConfig(config.key, config.value);
-            }
-        }
-
-        private void SetConfig(string key, string value)
-        {
-
-            string[] values = value.Split(Configuration.DELIMITER_CHARS);
-
-            switch (key)
-            {
-                case Configuration.WORK_PARALLEL_COUNT:
-                    {
-                        textBox21.Text = value;
-                    }
-                    break;
-                case Configuration.WORK_DEFAULT:
-                    {
-                        CheackRaidoBox(value);
-                    }
-                    break;
-            }
-        }
-
-
-        private void CheackRaidoBox(string value)
-        {
-            switch (value)
-            {
-                case "SERIES": { radioButton1.Checked = true; WORK_TYPE = "SERIES"; } break;
-                case "PARALLEL": { radioButton3.Checked = true; WORK_TYPE = "PARALLEL"; } break;
-            }
-        }
-
-        // 폼이 닫히기전에 모든 데이터 저장 처리
-        private void SaveConfig(object sender, FormClosingEventArgs e)
-        {
-            Dictionary<string, string> Configs = new Dictionary<string, string>();
-
-            // 필수 기본설정              
-            Configs.Add(Configuration.WORK_PARALLEL_COUNT, textBox21.Text); // 검색, 카테고리 클릭 후 체류시간
-            Configs.Add(Configuration.WORK_DEFAULT, WORK_TYPE); // 검색, 카테고리 클릭 후 체류시간
-            //series
-            List<Configuration> configs = Configuration.ConvertMapToObject(Configs);
-
-            sqlite.DeleteAllConfigurationByOwner(Configuration.Default);
-            sqlite.InsetAllConfiguration(configs);
+            // 로직아이템 초기화
+            InitLogicItem(currentLogicId);
         }
 
         // 테이블 헤더 설정
@@ -144,14 +95,16 @@ namespace Winner
         private void CommonInit()
         {
             // 콤보박스초기화
+            comboBox1.Enabled = false;
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox4.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox5.DropDownStyle = ComboBoxStyle.DropDownList;             
+            comboBox5.DropDownStyle = ComboBoxStyle.DropDownList;
+            
 
             // 그리드초기화
-            InitDataGridView();        
+            InitDataGridView();
 
             // 로직 세팅 처리
             InitLogic();
@@ -163,23 +116,17 @@ namespace Winner
             //InitLogicItem(currentLogicId);
         }
 
-        private void InitLogic( int index)
-        {
-            comboBox1.Items.Clear();
-
-            List<Logic> logics = sqlite.SelectLogicByType(Logic.CONST_TYPE_CONFIG);
-            for (int i = 0; i < logics.Count; i++)
-            {
-                comboBox1.Items.Add(new ComboItem(logics[i].id, logics[i].name));
-            }
-            comboBox1.SelectedIndex = index;
-            currentLogicId = logics[ index].id;
-        }
-
         // 로직 콤보박스 초기화
         private void InitLogic()
         {
-            InitLogic(0);
+            comboBox1.Items.Clear();
+
+            Logic logic = sqlite.SelectLogicById(currentLogicId);
+                     
+            comboBox1.Items.Add(new ComboItem(logic.id, logic.name));
+            
+            comboBox1.SelectedIndex = 0;
+            currentLogicId = logic.id;
         }
 
         // 로직아이템 초기화
@@ -188,13 +135,13 @@ namespace Winner
             dataGridView1.Rows.Clear();
             dataGridView1.Refresh();
             List<LogicItem> logicItem = sqlite.SelectAllLogicItemsByLogicId(id);
-            AddDataGridRow(logicItem);            
+            AddDataGridRow(logicItem);
         }
 
         // 로직입력값 초기화
         private void InitLogicInput(string id)
         {
-            List<LogicInput> logicInputs = sqlite.SelectAllLogicInputsByLogicId( id);
+            List<LogicInput> logicInputs = sqlite.SelectAllLogicInputsByLogicId(id);
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
 
             foreach (LogicInput item in logicInputs)
@@ -204,7 +151,7 @@ namespace Winner
 
             // 에이전트 초기화
             string AGENT = dictionary[LogicInput.CONST_AGNET];
-            comboBox2.SelectedItem = AGENT;            
+            comboBox2.SelectedItem = AGENT;
 
             // 브라우저 초기화
             string BROWSER = dictionary[LogicInput.CONST_BROWSER];
@@ -215,7 +162,7 @@ namespace Winner
             textBox1.Text = DUPLICATE_ADDRESS;
 
             // 키워드 초기화
-            string[] tokenKeyword  = dictionary[LogicInput.CONST_KEYWORD].Split(CommonUtils.delimiterChars);
+            string[] tokenKeyword = dictionary[LogicInput.CONST_KEYWORD].Split(CommonUtils.delimiterChars);
             string keyword = tokenKeyword[0];
             string postion = tokenKeyword[1];
             textBox2.Text = keyword;
@@ -250,10 +197,9 @@ namespace Winner
         private void SaveLogic(object sender, EventArgs e)
         {
             ExecuteSave(currentLogicId);
-            MessageBox.Show("저장되었습니다.");            
         }
 
-        private void ExecuteSave( string logicId)
+        private void ExecuteSave(string logicId)
         {
             // 로직입력값 저장
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -289,6 +235,8 @@ namespace Winner
 
             sqlite.DeleteLogicItemByLogicId(logicId);
             sqlite.InsertAllLogicItems(LogicItems);
+
+            Close();
         }
 
         private void InitDataGridView()
@@ -329,7 +277,7 @@ namespace Winner
         {
 
         }
-     
+
         private void propertyGrid1_Click(object sender, EventArgs e)
         {
 
@@ -356,13 +304,13 @@ namespace Winner
             foreach (LogicItem item in items)
             {
                 AddDataGridRow(item);
-            }            
+            }
         }
 
         // 로우 추가
         private void AddDataGridRow(LogicItem item)
         {
-            dataGridView1.Rows.Add(CommonUtils.MakeArray( item));
+            dataGridView1.Rows.Add(CommonUtils.MakeArray(item));
         }
 
         // 액션 추가
@@ -375,7 +323,7 @@ namespace Winner
 
             switch (o.Name)
             {
-                    case "ActionKeyword":
+                case "ActionKeyword":
                     {
                         action = "키워드";
                         value = textBox2.Text + "/" + comboBox4.Text;
@@ -386,44 +334,44 @@ namespace Winner
                         };
                     }
                     break;
-                    case "ActionStay":
+                case "ActionStay":
                     {
                         action = "체류";
-                        value = textBox3.Text + "/"+ textBox4.Text;
+                        value = textBox3.Text + "/" + textBox4.Text;
                     }
                     break;
-                    case "ActionScroll":
+                case "ActionScroll":
                     {
                         action = "스크롤";
-                        value = textBox8.Text + "/" + textBox7.Text  + "/" + textBox10.Text + "/" + textBox9.Text + "/" + textBox12.Text + "/" + textBox11.Text;
+                        value = textBox8.Text + "/" + textBox7.Text + "/" + textBox10.Text + "/" + textBox9.Text + "/" + textBox12.Text + "/" + textBox11.Text;
                     }
                     break;
-                    case "ActionView":
+                case "ActionView":
                     {
                         action = "게시글조회";
                         value = textBox5.Text;
                     }
                     break;
-                    case "ActionHistoryPrev":
+                case "ActionHistoryPrev":
                     {
                         action = "히스토리";
                         value = "Prev";
                     }
                     break;
-                    case "ActionHistoryNext":
+                case "ActionHistoryNext":
                     {
                         action = "히스토리";
                         value = "Next";
                     }
                     break;
-                    case "ActionMoveCategory":
+                case "ActionMoveCategory":
                     {
                         action = "카테고리";
                         value = comboBox5.Text;
                     }
                     break;
             }
-                       
+
             item.action = action;
             item.value = value;
 
@@ -434,7 +382,7 @@ namespace Winner
         private bool IsVaildate(string action, string value)
         {
             if (ObjectUtils.isNull(action) || ObjectUtils.isNull(value))
-            {                
+            {
                 return false;
             }
 
@@ -455,30 +403,7 @@ namespace Winner
             }
         }
 
-        string WORK_TYPE;
-        private void RadioButtonClick(object sender, EventArgs e)
-        {
-            switch (((RadioButton)sender).Text)
-            {
-                case "순차작업": { WORK_TYPE = "SERIES"; } break;
-                case "병렬작업": { WORK_TYPE = "PARALLEL"; } break;     
-            }
-        }
-
-        // 로직 변경
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboItem item = comboBox1.SelectedItem as ComboItem;
-            currentLogicId = item.Key;
-                      
-            // 로직입력값 초기화
-            InitLogicInput(currentLogicId);
-
-            // 로직아이템 초기화
-            InitLogicItem(currentLogicId);
-                     
-        }
-
+     
         // 로직아이템 선택삭제
         private void button3_Click(object sender, EventArgs e)
         {
@@ -492,11 +417,11 @@ namespace Winner
         // 로직아이템 삭제
         private void button1_Click(object sender, EventArgs e)
         {
-           foreach (DataGridViewRow row in dataGridView1.Rows)
-           {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
                 dataGridView1.Rows.Clear();
                 dataGridView1.Refresh();
-            }            
+            }
         }
 
         // 다른이름으로 로직 저장
@@ -522,9 +447,9 @@ namespace Winner
                 {
                     MessageBox.Show("이미 같은 이름의 로직이 존재합니다.");
                     return;
-                }                
+                }
             }
-                       
+
             string logicId = DateUtils.GetCurrentTimeStamp().ToString();
 
             // 로직저장
@@ -532,15 +457,14 @@ namespace Winner
             logic.id = logicId;
             logic.name = asLogicName;
             logic.type = Logic.CONST_TYPE_CONFIG;
-            logic.createdAt = DateTime.Now.ToString(); 
-            sqlite.InsertLogic( logic);
+            logic.createdAt = DateTime.Now.ToString();
+            sqlite.InsertLogic(logic);
 
             // 로직 인풋, 아이템 저장
-            ExecuteSave( logicId);
+            ExecuteSave(logicId);
 
             // 로직 초기화
-            InitLogic(comboBox1.Items.Count);
-            
+            InitLogic();
 
             // 새로만든 로직 선택
             // comboBox1.SelectedItem = asLogicName;
@@ -561,7 +485,7 @@ namespace Winner
 
                 // 로직 초기화
                 InitLogic();
-            }            
+            }
         }
 
         // 로직 리셋 ( DB데이터로 원상복구)
@@ -574,7 +498,7 @@ namespace Winner
             InitLogicItem(currentLogicId);
         }
 
-     
+
         // 그리드 행 업
         private void pictureBox4_Click(object sender, EventArgs e)
         {
@@ -591,7 +515,7 @@ namespace Winner
                     }
                     DataGridViewRowCollection rows = dataGridView1.Rows;
 
-                   
+
 
                     // remove the previous row and add it behind the selected row.
                     DataGridViewRow prevRow = rows[index - 1];
@@ -653,7 +577,7 @@ namespace Winner
                     List<DataGridViewRow> list = new List<DataGridViewRow>();
 
                     list.Add(targetRow);
-                    for ( int i = 0; i < rows.Count; i++)
+                    for (int i = 0; i < rows.Count; i++)
                     {
                         if (i == index) continue;
                         list.Add(rows[i]);
@@ -691,7 +615,7 @@ namespace Winner
                     DataGridViewRowCollection rows = dataGridView1.Rows;
                     DataGridViewRow targetRow = rows[index];
                     List<DataGridViewRow> list = new List<DataGridViewRow>();
-                    
+
                     for (int i = 0; i < rows.Count; i++)
                     {
                         if (i == index) continue;
@@ -713,13 +637,5 @@ namespace Winner
             }
             AutoSequence();
         }
-
-        private void Config_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            UI.InitLogic();
-        }
-
-
     }
 }
-

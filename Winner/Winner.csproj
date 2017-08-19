@@ -138,6 +138,7 @@
     <Reference Include="Microsoft.ServiceModel.Internal, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WebApi.0.5.0\lib\40-Full\Microsoft.ServiceModel.Internal.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
     </Reference>
@@ -195,6 +196,7 @@
   <ItemGroup>
     <Compile Include="Browsers.cs" />
     <Compile Include="CenterWinDialog.cs" />
+    <Compile Include="Command.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Config.cs">
@@ -211,6 +213,12 @@
     </Compile>
     <Compile Include="LogManager.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="Prompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Prompt.Designer.cs">
+      <DependentUpon>Prompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ranking.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -224,19 +232,19 @@
     <Compile Include="Setting.Designer.cs">
       <DependentUpon>Setting.cs</DependentUpon>
     </Compile>
-    <Compile Include="SlotAddForm.cs">
+    <Compile Include="SlotAdd.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SlotAddForm.Designer.cs">
-      <DependentUpon>SlotAddForm.cs</DependentUpon>
+    <Compile Include="SlotAdd.Designer.cs">
+      <DependentUpon>SlotAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SlotUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SlotUpdate.Designer.cs">
+      <DependentUpon>SlotUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLite.cs" />
-    <Compile Include="UpdateSlot.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UpdateSlot.Designer.cs">
-      <DependentUpon>UpdateSlot.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -246,6 +254,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Worker.cs" />
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -254,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Config.resx">
       <DependentUpon>Config.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Prompt.resx">
+      <DependentUpon>Prompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -271,11 +283,11 @@
     <EmbeddedResource Include="Setting.resx">
       <DependentUpon>Setting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SlotAddForm.resx">
-      <DependentUpon>SlotAddForm.cs</DependentUpon>
+    <EmbeddedResource Include="SlotAdd.resx">
+      <DependentUpon>SlotAdd.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateSlot.resx">
-      <DependentUpon>UpdateSlot.cs</DependentUpon>
+    <EmbeddedResource Include="SlotUpdate.resx">
+      <DependentUpon>SlotUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -370,6 +382,24 @@
     <None Include="Resources\KakaoTalk_20170812_2128198341.png" />
     <None Include="Resources\KakaoTalk_20170812_2128196801.png" />
     <None Include="Resources\abc.png" />
+    <None Include="Resources\if_TASKS_16980.png" />
+    <None Include="Resources\if_NOTEPAD_16938.png" />
+    <None Include="Resources\if_TRASH---FULL_16985.png" />
+    <None Include="Resources\if_POWER---RESTART_16946.png" />
+    <None Include="Resources\if_TASKS_169801.png" />
+    <None Include="Resources\if_NOTEPAD_169381.png" />
+    <None Include="Resources\if_TRASH---FULL_169851.png" />
+    <None Include="Resources\if_POWER---RESTART_169461.png" />
+    <None Include="Resources\if_go-top_118775.png" />
+    <None Include="Resources\if_go-top_1187751.png" />
+    <None Include="Resources\if_go-up_118776.png" />
+    <None Include="Resources\if_go-down_118768.png" />
+    <None Include="Resources\if_go-bottom_118767.png" />
+    <None Include="Resources\if_meanicons_22_197212.png" />
+    <None Include="Resources\if_meanicons_24_197210.png" />
+    <None Include="Resources\if_icons_play_1564490-iloveimg-resized.png" />
+    <None Include="Resources\32-32-789a21572f6453fee6fc86cf8b2a1844-play.png" />
+    <None Include="Resources\stop.png" />
     <Content Include="Resources\다운로드_118x136.jpg" />
     <Content Include="Resources\로그인배경.jpg" />
     <None Include="Resources\캡처.PNG" />

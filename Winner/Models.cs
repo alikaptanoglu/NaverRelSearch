@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using System.Text;
+using Winner;
 
 namespace Naver.SearchAd
 {
@@ -38,8 +40,15 @@ namespace Naver.SearchAd
         
         public string id { get; set; }
         public string name { get; set; }
-    
-        public static string Column = "Id, Name";
+        public string createdAt { get; set; }
+        public string type { get; set; }
+
+
+        public static string CONST_TYPE_CONFIG = "C";
+        public static string CONST_TYPE_MANUAL = "M";
+
+        public static string Column = "Id, Name, CreatedAt, Type";
+        public static string Values = "'{0}','{1}','{2}', '{3}'";
         public static string TableName = "Logic";
 
         internal static List<Logic> MakeResultSet(SQLiteDataReader reader)
@@ -50,7 +59,9 @@ namespace Naver.SearchAd
             {
                 Logic logic = new Logic();
                 logic.id = (string)reader["Id"];
-                logic.name = (string)reader["Name"];                
+                logic.name = (string)reader["Name"];
+                logic.createdAt = (string)reader["CreatedAt"];
+                logic.type = (string)reader["Type"];
                 logics.Add( logic);
             }
 
@@ -73,11 +84,26 @@ namespace Naver.SearchAd
         public const string CONST_CATEGORY_MOVE = "Logic.Input.Category.Move";
         public const string CONST_AGNET = "Logic.Input.Agent";
         public const string CONST_BROWSER = "Logic.Input.Browser";
+
+      
+
         public const string CONST_DUPLICATE_ADDRESS = "Logic.Input.Duplicate.Address";
 
         public static string TableName = "LogicInput";
         public static object Column = "Key, Value, LogicId";
         public static string Values = "'{0}','{1}','{2}'";
+
+        internal static Dictionary<string, string> ConvertObjectToMap(List<LogicInput> inputs)
+        {
+            Dictionary<string, string> map = new Dictionary<string, string>();
+
+            foreach(LogicInput input in inputs)
+            {
+                map.Add(input.key, input.value);
+            }
+
+            return map;           
+        }
 
         internal static List<LogicInput> MakeResultSet(SQLiteDataReader reader)
         {
@@ -131,9 +157,26 @@ namespace Naver.SearchAd
         public static int HEADER_ACTION = 1;
         public static int HEADER_VALUE = 2;
 
-        public static object TableName = "LogicItem";
-        public static object Column = "Sequence, Action, Value, LogicId";
+        public static string TableName = "LogicItem";
+        public static string Column = "Sequence, Action, Value, LogicId";
         public static string Values = "'{0}','{1}','{2}','{3}'";
+
+        public static string GetPrepixColumn( string prepix)
+        {
+            StringBuilder sb = new StringBuilder();
+            string[] columns = Column.Split( CommonUtils.delimiterComma);
+
+            for (int i = 0; i < columns.Length; i++)
+            {
+                sb.Append( prepix).Append(".").Append( columns[i]);
+
+                if (i != columns.Length - 1)
+                {
+                    sb.Append(", ");                    
+                }
+            }
+            return sb.ToString();            
+        }
 
         internal static List<LogicItem> MakeResultSet(SQLiteDataReader reader)
         {
@@ -201,6 +244,9 @@ namespace Naver.SearchAd
         public static string Default = "Default";
         public static char[] DELIMITER_CHARS =  { ',' };
         public static char[] DELIMITER_LIST_CHARS = { '|' };
+
+        public const string WORK_PARALLEL_COUNT = "Work.Parallel.Count";
+        public const string WORK_DEFAULT = "Work.Default";
 
         /// <summary>
         /// 필수설정
@@ -279,13 +325,38 @@ namespace Naver.SearchAd
         public string rank { get; set; }
         public string description { get; set; }
         public string createdAt { get; set; }
-
-        public static string Values = "'{0}','{1}','{2}','{3}','{4}','{5}','{6}'";
-        public static string Column = "OID, LogicName, CreatedAt, ToCount, CurrCount, Rank, Description";
+        public string logicId { get; set; }
+        
+        public static string Values = "'{0}','{1}','{2}','{3}','{4}','{5}','{6}', '{7}'";
+        public static string Column = "OID, LogicName, ToCount, CurrCount, Rank, Description, CreatedAt, LogicId";
+        public static object TableName = "Slot";
 
         public static int AGENT_TYPE_PC = 1;
         public static int AGENT_TYPE_MOBILE = 2;
 
+        internal static List<Slot> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<Slot> slots = new List<Slot>();
+
+            while (reader.Read())
+            {
+                Slot slot = new Slot();
+                slot.OID = (string)reader["OID"];
+                slot.logicName = (string)reader["LogicName"];
+                slot.createdAt = (string)reader["CreatedAt"];
+                slot.toCount = (string)reader["ToCount"];
+                slot.currCount = (string)reader["CurrCount"];
+                slot.rank = (string)reader["Rank"];
+                slot.description = (string)reader["Description"];
+                slot.logicId = (string)reader["LogicId"];
+
+                slots.Add(slot);
+
+            }
+
+            return slots;
+
+        }
     }
 
 

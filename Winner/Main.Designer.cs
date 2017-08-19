@@ -60,6 +60,7 @@ namespace Winner
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -72,6 +73,7 @@ namespace Winner
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox3
@@ -100,7 +102,7 @@ namespace Winner
             this.label4.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.label4.Font = new System.Drawing.Font("맑은 고딕", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(29, 11);
+            this.label4.Location = new System.Drawing.Point(28, 11);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(174, 30);
             this.label4.TabIndex = 13;
@@ -150,6 +152,7 @@ namespace Winner
             this.dataGridView1.Size = new System.Drawing.Size(1128, 314);
             this.dataGridView1.TabIndex = 12;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView1_EditingControlShowing);
             // 
             // groupBox2
@@ -320,7 +323,7 @@ namespace Winner
             // 
             this.pictureBox6.BackgroundImage = global::Winner.Properties.Resources.if_7_330410__1_4;
             this.pictureBox6.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox6.Location = new System.Drawing.Point(1065, 12);
+            this.pictureBox6.Location = new System.Drawing.Point(1001, 12);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(26, 26);
             this.pictureBox6.TabIndex = 29;
@@ -331,7 +334,7 @@ namespace Winner
             // 
             this.comboBox1.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(757, 14);
+            this.comboBox1.Location = new System.Drawing.Point(693, 14);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(296, 23);
             this.comboBox1.TabIndex = 30;
@@ -340,7 +343,7 @@ namespace Winner
             // 
             this.pictureBox4.BackgroundImage = global::Winner.Properties.Resources.if_1_3304131;
             this.pictureBox4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox4.Location = new System.Drawing.Point(1096, 12);
+            this.pictureBox4.Location = new System.Drawing.Point(1032, 12);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(26, 26);
             this.pictureBox4.TabIndex = 31;
@@ -351,16 +354,28 @@ namespace Winner
             // 
             this.pictureBox5.BackgroundImage = global::Winner.Properties.Resources.if_17_3303993;
             this.pictureBox5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox5.Location = new System.Drawing.Point(1126, 12);
+            this.pictureBox5.Location = new System.Drawing.Point(1062, 12);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(26, 26);
             this.pictureBox5.TabIndex = 32;
             this.pictureBox5.TabStop = false;
             this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
             // 
+            // pictureBox7
+            // 
+            this.pictureBox7.BackgroundImage = global::Winner.Properties.Resources.start;
+            this.pictureBox7.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox7.Location = new System.Drawing.Point(1123, 9);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox7.TabIndex = 33;
+            this.pictureBox7.TabStop = false;
+            this.pictureBox7.Click += new System.EventHandler(this.StartStopWorkBtn);
+            // 
             // Main
             // 
             this.ClientSize = new System.Drawing.Size(1179, 634);
+            this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.comboBox1);
@@ -397,6 +412,7 @@ namespace Winner
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -432,6 +448,7 @@ namespace Winner
         private ComboBox comboBox1;
         private PictureBox pictureBox4;
         private PictureBox pictureBox5;
+        private PictureBox pictureBox7;
     }
 }
 

@@ -181,6 +181,12 @@ namespace Winner
             // 카테고리 이동
             string CATEGORY = dictionary[LogicInput.CONST_CATEGORY_MOVE];
             comboBox5.SelectedItem = CATEGORY;
+
+            // 슬롯 대기시간
+            string[] SLOT_WAIT_TIME = dictionary[LogicInput.CONST_SLOT_WAIT_TIME].Split(CommonUtils.delimiterChars);
+            textBox6.Text = SLOT_WAIT_TIME[0];
+            textBox13.Text = SLOT_WAIT_TIME[1];
+
         }
 
         // 로직 저장 처리
@@ -201,6 +207,7 @@ namespace Winner
             dictionary.Add(LogicInput.CONST_AGNET, comboBox2.Text);
             dictionary.Add(LogicInput.CONST_BROWSER, comboBox3.Text);
             dictionary.Add(LogicInput.CONST_DUPLICATE_ADDRESS, textBox1.Text);
+            dictionary.Add(LogicInput.CONST_SLOT_WAIT_TIME, CommonUtils.MakeDelimeterItem(textBox6.Text, textBox13.Text));
 
             List<LogicInput> logicInputs = LogicInput.ConvertMapToObject(dictionary, logicId);
 
@@ -307,52 +314,58 @@ namespace Winner
             switch (o.Name)
             {
                 case "ActionKeyword":
+                {
+                    action = "키워드";
+                    value = textBox2.Text + "/" + comboBox4.Text;
+                    if (!IsVaildate(action, value))
                     {
-                        action = "키워드";
-                        value = textBox2.Text + "/" + comboBox4.Text;
-                        if (!IsVaildate(action, value))
-                        {
-                            MessageBox.Show("값이 비어 있는 액션은 추가 할 수 없습니다.");
-                            return;
-                        };
-                    }
-                    break;
+                        MessageBox.Show("값이 비어 있는 액션은 추가 할 수 없습니다.");
+                        return;
+                    };
+                }
+                break;
                 case "ActionStay":
-                    {
-                        action = "체류";
-                        value = textBox3.Text + "/" + textBox4.Text;
-                    }
-                    break;
+                {
+                    action = "체류";
+                    value = textBox3.Text + "/" + textBox4.Text;
+                }
+                break;
                 case "ActionScroll":
-                    {
-                        action = "스크롤";
-                        value = textBox8.Text + "/" + textBox7.Text + "/" + textBox10.Text + "/" + textBox9.Text + "/" + textBox12.Text + "/" + textBox11.Text;
-                    }
-                    break;
+                {
+                    action = "스크롤";
+                    value = textBox8.Text + "/" + textBox7.Text + "/" + textBox10.Text + "/" + textBox9.Text + "/" + textBox12.Text + "/" + textBox11.Text;
+                }
+                break;
                 case "ActionView":
-                    {
-                        action = "게시글조회";
-                        value = textBox5.Text;
-                    }
-                    break;
+                {
+                    action = "게시글조회";
+                    value = textBox5.Text;
+                }
+                break;
                 case "ActionHistoryPrev":
-                    {
-                        action = "히스토리";
-                        value = "Prev";
-                    }
-                    break;
+                {
+                    action = "히스토리";
+                    value = "Prev";
+                }
+                break;
                 case "ActionHistoryNext":
-                    {
-                        action = "히스토리";
-                        value = "Next";
-                    }
-                    break;
+                {
+                    action = "히스토리";
+                    value = "Next";
+                }
+                break;
                 case "ActionMoveCategory":
-                    {
-                        action = "카테고리";
-                        value = comboBox5.Text;
-                    }
-                    break;
+                {
+                    action = "카테고리";
+                    value = comboBox5.Text;
+                }
+                break;
+                case "ActionMoveHome":
+                {
+                    action = "홈";
+                    value = "Move";
+                }
+                break;
             }
 
             item.action = action;

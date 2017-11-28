@@ -84,8 +84,9 @@ namespace Naver.SearchAd
         public const string CONST_CATEGORY_MOVE = "Logic.Input.Category.Move";
         public const string CONST_AGNET = "Logic.Input.Agent";
         public const string CONST_BROWSER = "Logic.Input.Browser";
+        public const string CONST_SLOT_WAIT_TIME = "Logic.input.Slot.Wait.Time";
 
-      
+
 
         public const string CONST_DUPLICATE_ADDRESS = "Logic.Input.Duplicate.Address";
 
@@ -230,6 +231,31 @@ namespace Naver.SearchAd
 
             return Rankings;
 
+        }
+    }
+
+    public class Keyword
+    {
+        public string keyword { get; set; }        
+
+        public static string TableName = "Keyword";
+        public static string Column = "Keyword";
+        public static string Values = "'{0}'";
+
+        public static List<Keyword> MakeResultSet(SQLiteDataReader reader)
+        {
+            List<Keyword> keywords = new List<Keyword>();
+
+            while (reader.Read())
+            {
+                Keyword keyword = new Keyword();
+                keyword.keyword = (string)reader["Keyword"];           
+
+                keywords.Add(keyword);
+
+            }
+
+            return keywords;
         }
     }
 

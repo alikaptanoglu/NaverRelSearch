@@ -191,6 +191,11 @@ namespace Winner
             // 카테고리 이동
             string CATEGORY = dictionary[LogicInput.CONST_CATEGORY_MOVE];
             comboBox5.SelectedItem = CATEGORY;
+
+            // 슬롯 대기시간
+            string[] SLOT_WAIT_TIME = dictionary[LogicInput.CONST_SLOT_WAIT_TIME].Split(CommonUtils.delimiterChars);
+            textBox6.Text = SLOT_WAIT_TIME[0];
+            textBox13.Text = SLOT_WAIT_TIME[1];
         }
 
         // 로직 저장 처리
@@ -211,6 +216,7 @@ namespace Winner
             dictionary.Add(LogicInput.CONST_AGNET, comboBox2.Text);
             dictionary.Add(LogicInput.CONST_BROWSER, comboBox3.Text);
             dictionary.Add(LogicInput.CONST_DUPLICATE_ADDRESS, textBox1.Text);
+            dictionary.Add(LogicInput.CONST_SLOT_WAIT_TIME, CommonUtils.MakeDelimeterItem(textBox6.Text, textBox13.Text));
 
             List<LogicInput> logicInputs = LogicInput.ConvertMapToObject(dictionary, logicId);
 
@@ -368,6 +374,12 @@ namespace Winner
                     {
                         action = "카테고리";
                         value = comboBox5.Text;
+                    }
+                    break;
+                case "ActionMoveHome":
+                    {
+                        action = "홈";
+                        value = "Move";
                     }
                     break;
             }

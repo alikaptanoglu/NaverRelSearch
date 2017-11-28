@@ -10,50 +10,30 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.PhantomJS;
 using System.Threading;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Remote;
 
 namespace Winner
 {
+
     public class Command
     {
-        enum NaverTab
-        {
-            Search = 0,
-            Image = 2,
-            Blog = 3,
-            Movie = 1,
-            Knowledge = 5,
-            Cafe = 6,
-            News = 4
-        };        
-
         private List<LogicItem> items;
         private Dictionary<string, string> inputMap;
         private IWebDriver driver;
-        private LogManager logManager;
-        private int agentType;
+        private LogManager logManager;        
+        private WebDriverWait WAIT;
 
-        private static int LOCATION_HOME = 0; // 메인화면
-        private static int LOCATION_SEARCH = 1; // 검색화면
-
-        private static int AGENT_TYPE_PC = 10; // 검색화면
-        private static int AGENT_TYPE_MOBILE = 20; // 검색화면
-
-        private const string CONST_DEFAULT_PC_START_URL = "https://www.naver.com/";
-        private const string CONST_DEFAULT_MOBILE_START_URL = "https://m.naver.com/";
-
-        private int WHERE;
-        private int CATEGORY;
-
-        public static string COMMAND_KEYWORD = "키워드";
+        private PropertyManager PROP;
 
         public Command(List<LogicItem> items, Dictionary<string, string> inputMap)
         {
             this.items = items;
             this.inputMap = inputMap;
-
+            this.PROP = new PropertyManager();
+            
             SelectUpAgent(inputMap[LogicInput.CONST_AGNET]);
         }
-
 
         public void doCommand()
         {
@@ -66,24 +46,24 @@ namespace Winner
         {
             foreach (LogicItem item in items)
             {
+                
+                string[] waitTime = inputMap[LogicInput.CONST_SLOT_WAIT_TIME].Split(CommonUtils.delimiterChars);
+                logManager.AppendLog("슬롯대기시간 {0}~{1}초", waitTime[0], waitTime[1]);
+                Stay(waitTime[0], waitTime[1]);
+
                 ExecuteCommand(item.action, item.value);
             }                                    
         }
 
         private void SelectUpAgent(string type)
-        {
-            if (type.Equals("PC"))
+        {           
+            if (type.Equals( Agent.AGENT_TYPE_PC) || type.Equals(Agent.AGENT_TYPE_MOBILE))
             {
-                agentType = AGENT_TYPE_PC;
-            }
-            else if (type.Equals("모바일"))
-            {
-                agentType = AGENT_TYPE_MOBILE;
-            }
+                PROP.AGENT.SetType( type);                
+            }            
             else
             {
-                string[] agent = { "PC", "모바일" };
-                SelectUpAgent(agent[CommonUtils.GetRandomValue(0, agent.Length - 1)]);
+                PROP.AGENT.SetRandomAgent();                
             }
         }
 
@@ -94,15 +74,23 @@ namespace Winner
 
             DefaultStay();
 
+            logManager.AppendLog(string.Format("[{0}][{1}] 작업을 시작합니다.", action, value));
+                        
             switch (action)
             {
                 case "키워드":
-                    {
-                        SetSearchKeyword(v[0], v[1]);
+                    {                        
+                        if ( PROP.LOCATION.GetLocation() == Location.HOME)
+                        {                                                      
+                            bool success = SetSearchKeyword("#query", v[0], -1);
 
-                        if (WHERE == LOCATION_HOME)
-                        {
-                            if (agentType == AGENT_TYPE_PC)
+                            if (!success)
+                            {
+                                MoveHome();
+                                SetSearchKeyword("#query", v[0], -1);
+                            }
+
+                            if (PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
                             {
                                 ClickSearchButton("search_btn");
                             }
@@ -110,11 +98,37 @@ namespace Winner
                             {
                                 ClickSearchButton("query");
                             }
-                            
+
+
+                            PROP.LOCATION.SetLocation(Location.SEARCH);                            
+
                         }
-                        else if (WHERE == LOCATION_SEARCH)
+                        else if (PROP.LOCATION.GetLocation() == Location.SEARCH)
                         {
-                            if (agentType == AGENT_TYPE_PC)
+                            bool success = false;
+                            string selector = null;
+                            int direction = 0;
+
+                            if (v[1].Equals("상단"))
+                            {
+                                selector = "#nx_query";
+                                direction = -1;
+                                success = SetSearchKeyword(selector, v[0], direction);
+                            }
+                            else
+                            {
+                                selector = "#nx_query_btm";
+                                direction = 1;
+                                success = SetSearchKeyword(selector, v[0], direction);
+                            }
+
+                            if (!success)
+                            {
+                                MoveHome();
+                                SetSearchKeyword(selector, v[0], direction);
+                            }
+
+                            if (PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
                             {
                                 ClickSearchButton("bt_search");
                             }
@@ -154,7 +168,16 @@ namespace Winner
                     break;
                 case "카테고리":
                     {
-                        MoveCategory(v[0]);
+                        // 카테고리
+                        PROP.LOCATION.CATEGORY = PROP.LOCATION.CATEGORY.GetCategoryByName(v[0]);
+
+                        bool success = MoveCategory();
+
+                        if (!success)
+                        {
+                            MoveHome();
+                            MoveCategory();
+                        }
                     }
                     break;
                 case "게시글조회":
@@ -166,7 +189,7 @@ namespace Winner
                         while (!isSuccess)
                         {
                             isSuccess = PostViewBy(value.Trim(), true);
-
+                            
                             if (isSuccess || index == MAX_SEARCH_PAGE)
                             {
                                 break;                                
@@ -174,7 +197,8 @@ namespace Winner
                             else
                             {
                                 doScroll(100, 200, 20);
-                                if (agentType == AGENT_TYPE_PC)
+
+                                if (PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
                                 {
                                     driver.FindElement(By.CssSelector(".next")).Click();
                                 }
@@ -188,205 +212,243 @@ namespace Winner
                         }                        
                     }
                     break;
+                case "홈":
+                    {
+                        MoveHome();
+                    }
+                    break;
 
             }
 
             DefaultStay();
         }
 
+        // 홈 이동
+        private void MoveHome()
+        {
+            IWebElement element = CssSelector.FindElement(driver, ".naver_logo, .logo_naver, .link_naver, .h_logo");      
+            
+            if (element == null)
+            {
+                if ( PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
+                {
+                    driver.Navigate().GoToUrl(Url.CONST_DEFAULT_PC_START_URL);
+                }
+                else
+                {
+                    driver.Navigate().GoToUrl(Url.CONST_DEFAULT_MOBILE_START_URL);
+                }                
+            }
+            else
+            {                
+                element.Click();
+            }
+
+            PROP.LOCATION.SetLocation( Location.HOME);                        
+        }
+
+
+        // 종료처리
+        internal void Finish()
+        {
+            if ( driver != null)
+            {
+
+                try
+                {
+                    driver.Close();
+                    driver.Quit();
+                }
+                catch (Exception ex)
+                {
+                    if (ex is InvalidOperationException)
+                    {
+                        driver.Quit();
+                    }
+                }
+            }
+        }
+
         // 게시물 조회
         private bool PostViewBy(string url, bool isSelf)
         {
+            Start:
+
             IWebElement element = null;
-            IReadOnlyCollection<IWebElement> elements = null;
+            IReadOnlyCollection<IWebElement> elements = null;          
 
-            if (isSelf)
-            {
-                var jse = (IJavaScriptExecutor)driver;
-                jse.ExecuteScript("var array = document.getElementsByTagName('a'); for (var i = 0; i < array.length; i++) { array[i].setAttribute('target', '_self')}", "");
-            }
-
-            elements = null;
-
-            if (url != null && url.Length > 0)
-            {
-                elements = driver.FindElements(By.CssSelector(string.Format("[href*='{0}']", url)));
-                if (elements.Count == 0)
-                {
-                    return false;
-                }
-            }
-            else
+            try
             { 
-                if (CATEGORY == (int)NaverTab.Blog)
+                if (isSelf)
                 {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_blog_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
+                    var jse = (IJavaScriptExecutor)driver;
+                    jse.ExecuteScript("var array = document.getElementsByTagName('a'); for (var i = 0; i < array.length; i++) { array[i].setAttribute('target', '_self')}", "");
                 }
-                else if (CATEGORY == (int)NaverTab.News)
+
+                elements = null;
+
+
+
+                if (url != null && url.Length > 0)
                 {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector("._sp_each_title")) : driver.FindElements(By.CssSelector(".list_news .bx"));
-                }
-                else if (CATEGORY == (int)NaverTab.Cafe)
-                {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_cafe_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
-                }
-                else if (CATEGORY == (int)NaverTab.Image)
-                {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".thumb")) : driver.FindElements(By.CssSelector(".photo_grid a"));
-                }
-                else if (CATEGORY == (int)NaverTab.Knowledge)
-                {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".question a")) : driver.FindElements(By.CssSelector(".lst_total a"));
-                }
-                else if (CATEGORY == (int)NaverTab.Movie)
-                {
-                    elements = agentType == AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".video_info a")) : driver.FindElements(By.CssSelector(".video_list .info_area a"));
-                }
-                else if (CATEGORY == (int)NaverTab.Search)
-                {
-                    if (agentType == AGENT_TYPE_PC)
+                    elements = driver.FindElements(By.CssSelector(string.Format("[href*='{0}']", url)));
+                    if (elements.Count == 0)
                     {
-                        elements = driver.FindElements(By.CssSelector(".question a, .sh_blog_title, ._sp_each_title, .sh_cafe_title, .sh_booktext_title, lst_img a, .video_thum"));
+                        return false;
+                    }
+                }
+                else
+                {            
+                    if (PROP.LOCATION.CATEGORY.code == Category.BLOG)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_blog_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.NEWS)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector("._sp_each_title")) : driver.FindElements(By.CssSelector(".list_news .bx"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.CAFE)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_cafe_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.IMAGE)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".thumb")) : driver.FindElements(By.CssSelector(".photo_grid a"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.KNOWLEDGE)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".question a")) : driver.FindElements(By.CssSelector(".lst_total a"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.MOVIE)
+                    {
+                        elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".video_info a")) : driver.FindElements(By.CssSelector(".video_list .info_area a"));
+                    }
+                    if (PROP.LOCATION.CATEGORY.code == Category.SEARCH)
+                    {
+                        if ( PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)                        
+                        {
+                            elements = driver.FindElements(By.CssSelector(".question a, .sh_blog_title, ._sp_each_title, .sh_cafe_title, .sh_booktext_title, lst_img a, .video_thum"));
+                        }
+                        else
+                        {
+                            elements = driver.FindElements(By.CssSelector(".list_video .bx, .photo_grid a, .list_news .bx, .sp_ntotal .bx"));
+                        }
                     }
                     else
                     {
-                        elements = driver.FindElements(By.CssSelector(".list_video .bx, .photo_grid a, .list_news .bx, .sp_ntotal .bx"));
+                        elements = driver.FindElements(By.CssSelector("a"));
                     }
                 }
+
+            }
+            catch (UnhandledAlertException f)
+            {
+                IAlert alert = driver.SwitchTo().Alert();
+                alert.Accept();
+                goto Start;
             }
 
-            
+
+            if (elements.Count == 0)
+            {                
+                HistoryPrev();
+                goto Start;
+            }
+
             while (true)
             {
+                
                 try
-                {
+                {                  
                     Random random = new Random();
                     int selectIndex = random.Next(0, elements.Count - 1);
                     element = elements.ElementAt(selectIndex);
-                    element.Click();
+                    element.Click();                    
                     return true;
                 }
                 catch (Exception e)
                 {                   
                     if (e is InvalidOperationException)
-                    {
-                        continue;
+                    {                       
+                         continue;
                     }
                 }
             }
         }
 
-        // Text를 통해서 카테고리의 인덱스를 조회
-        private int convertStringToTabIndex(string value)
-        {
-            int selectIndex = -1;
+       
 
-            if (value.Equals("통합검색"))
-            {
-                selectIndex = (int)NaverTab.Search;
-            }
-            else if (value.Equals("이미지"))
-            {
-                selectIndex = (int)NaverTab.Image;
-            }
-            else if (value.Equals("블로그"))
-            {
-                selectIndex = (int)NaverTab.Blog;
-            }
-            else if (value.Equals("동영상"))
-            {
-                selectIndex = (int)NaverTab.Movie;
-            }
-            else if (value.Equals("지식IN"))
-            {
-                selectIndex = (int)NaverTab.Knowledge;
-            }
-            else if (value.Equals("카페"))
-            {
-                selectIndex = (int)NaverTab.Cafe;
-            }
-            else if (value.Equals("뉴스"))
-            {
-                selectIndex = (int)NaverTab.News;
-            }
-            else if (value.Equals("랜덤"))
-            {
-                int[] tabArray = new int[] { (int)NaverTab.Cafe, (int)NaverTab.Knowledge, (int)NaverTab.Movie, (int)NaverTab.Blog, (int)NaverTab.Image, (int)NaverTab.Search, (int)NaverTab.News };
-                convertStringToTabIndex( tabArray[CommonUtils.GetRandomValue(0, tabArray.Length - 1)].ToString());                
-            }
-
-            return selectIndex;
-        }
-
-        private string convertStringToTabHref(int index)
-        {
-            string href = null;
-            string[] allCategory = { "where=m", "where=m_image", "where=m_blog", "where=m_video", "where=m_kin", "where=m_cafe", "where=m_news" };
-
-            if (index == (int)NaverTab.Search)
-            {
-                return "where=m";
-            }
-            else if (index == (int)NaverTab.Image)
-            {
-                return "where=m_image";
-            }
-            else if (index == (int)NaverTab.Blog)
-            {
-                return "where=m_blog";
-            }
-            else if (index == (int)NaverTab.Movie)
-            {
-                return "where=m_video";
-            }
-            else if (index == (int)NaverTab.Knowledge)
-            {
-                return "where=m_kin";
-            }
-            else if (index == (int)NaverTab.Cafe)
-            {
-                return "where=m_cafe";
-            }
-            else if (index == (int)NaverTab.News)
-            {
-                return "where=m_news";
-            }
-
-            return href;
-        }
-
-        private void MoveCategory( string category)
-        {
+        private bool MoveCategory()
+        {            
             int index = 0;
-            IWebElement element = null;
-            index = convertStringToTabIndex(category);
+            IWebElement element = null;            
+            //index = convertStringToTabIndex(category);
 
-            if (agentType == AGENT_TYPE_PC)
+            if (PROP.LOCATION.GetLocation() == Location.HOME)
             {
-                element = driver.FindElement(By.CssSelector(string.Format(".lnb_menu li.lnb{0}", index)));
+                if (PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
+                {
+                    //string className = TabIndexToMainTabClassName(index);                   
+                    element = CssSelector.FindElement(driver, string.Format(".{0}", PROP.LOCATION.CATEGORY.mainClass));
 
-                try
-                {
-                    logManager.AppendLog("{0} 카테고리로 이동합니다.", category);
-                    element.Click();
+                    if (element == null)
+                    {
+                        return false;
+                    }
+
+                    try
+                    {
+                        element.Click();
+                    }
+                    catch (Exception e)
+                    {
+                        driver.FindElement(By.XPath("//*[@id='_nx_lnb_more']/a")).Click();
+                        Thread.Sleep(300);
+                        element.Click();
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    driver.FindElement(By.XPath("//*[@id='_nx_lnb_more']/a")).Click();
-                    Thread.Sleep(300);
+                    //FIX 모바일 쪽은 나중에 수정                    
+                    element = driver.FindElement(By.CssSelector(string.Format("li a[href*='{0}']", PROP.LOCATION.CATEGORY.m_menu)));
+                    doScroll(1000, -200, 1);
                     element.Click();
                 }
             }
-            else
+
+            if (PROP.LOCATION.GetLocation() == Location.SEARCH)
             {
-                string value = convertStringToTabHref(index);
-                element = driver.FindElement(By.CssSelector(string.Format("li a[href*='{0}']", value)));
-                doScroll(1000, -200, 1);
-                logManager.AppendLog("{0} 카테고리로 이동합니다.", category);
-                element.Click();
+                if (PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)
+                {                    
+                    element = CssSelector.FindElement(driver, string.Format(".lnb_menu li.lnb{0}", PROP.LOCATION.CATEGORY.index));
+
+                    if (element == null)
+                    {
+                        return false;
+                    }
+
+                    try
+                    {
+                        element.Click();
+                    }
+                    catch (Exception e)
+                    {
+                        driver.FindElement(By.XPath("//*[@id='_nx_lnb_more']/a")).Click();
+                        Thread.Sleep(300);
+                        element.Click();
+                    }
+                }
+                else
+                {
+                    string value = PROP.LOCATION.CATEGORY.m_menu;
+                    element = driver.FindElement(By.CssSelector(string.Format("li a[href*='{0}']", PROP.LOCATION.CATEGORY.m_menu)));
+                    doScroll(1000, -200, 1);
+                    element.Click();
+                }
             }
 
-            CATEGORY = index;
+            PROP.LOCATION.CATEGORY.SetCategory( PROP.LOCATION.CATEGORY.name);
+            return true;
         }
 
         // 이전 히스토리로 이동
@@ -408,10 +470,17 @@ namespace Winner
             Stay(0, 1);
         }
 
+        private void Stay(String min, String max)
+        {
+            Stay(int.Parse(min), int.Parse(max));
+        }
+
         private void Stay( int min, int max)
         {            
+
             int RandomValue = CommonUtils.GetRandomValue( min, max);            
             Thread.Sleep(RandomValue * 1000);
+
         }
 
  
@@ -425,28 +494,89 @@ namespace Winner
             }
         }
 
-        private void SetSearchKeyword( string keyword, string position)
-        {                                    
-            IWebElement element = null;
-            
-            if (position.Equals("상단"))
+        private bool SetSearchKeyword(string selector, string keyword, int direction)
+        {
+            //IWebElement e = driver.FindElement(By.CssSelector("#query"));
+            //((IJavaScriptExecutor)driver).ExecuteScript( "arguments[0].scrollIntoView();", e);
+
+            IWebElement element = FindElementByScroll( selector, direction);
+
+            if (element == null)
             {
-                element =  driver.FindElement(By.CssSelector( "#query"));
-            }
-            else
-            {
-                element = driver.FindElement(By.CssSelector("#nx_query_btm"));
+                return false;
             }
 
             element.Clear();
-            element.SendKeys( keyword);
+
+            if (keyword.Length == 0)
+            {
+                keyword = CommonService.GetRandomKeyword();
+            }
+            
+            char[] charArray = keyword.ToCharArray();
+            foreach (char c in charArray)
+            {                                
+                element.SendKeys(c.ToString());
+                Thread.Sleep(400);
+            }
+
+            return true;
+            
+
+            //char[] charArray = keyword.ToCharArray();
+            //foreach (char c in charArray)
+            //{
+            //    HanGulUtils.HANGUL_INFO info = HanGulUtils.DevideJaso(c);
+
+            //    if (info.isHangul.Equals("H"))
+            //    {
+            //        char[] charArray2 = info.chars;
+            //        foreach (char c2 in charArray2)
+            //        {
+            //            element.SendKeys(c2.ToString());
+
+            //        }
+            //    }
+            //    else
+            //    {
+            //        element.SendKeys(c.ToString());
+
+            //    }
+
+            //}
+
+        }
+
+        
+
+        private IWebElement FindElementByScroll(string selector, int direction)
+        {
+            IWebElement element = null;
+            int MAX_COUNT = 10;
+            int index = 0;
+
+            while (element == null &&  index < MAX_COUNT)
+            {
+                try
+                {
+                    
+                    element = driver.FindElement(By.CssSelector(selector));
+                }
+                catch (Exception e)
+                {
+                    doScroll(1, 100 * direction, 1);
+                    index++;
+                }
+            }
+
+            return element;
         }
 
 
 
         // 검색 버튼 클릭
         private void ClickSearchButton(string element)
-        {
+        {            
             switch (element)
             {
                 case "search_btn": { driver.FindElement(By.Id(element)).Click(); } break;
@@ -466,7 +596,7 @@ namespace Winner
         {
             SelectBrowser(inputMap[LogicInput.CONST_BROWSER]);
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(999999);
-            string initPage = agentType == AGENT_TYPE_PC ? CONST_DEFAULT_PC_START_URL : CONST_DEFAULT_MOBILE_START_URL;
+            string initPage = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? Url.CONST_DEFAULT_PC_START_URL : Url.CONST_DEFAULT_MOBILE_START_URL;
             driver.Navigate().GoToUrl( initPage);            
         }
 
@@ -480,9 +610,9 @@ namespace Winner
                         cOptions.AddArguments("disable-infobars");
                         cOptions.AddArguments("--js-flags=--expose-gc");
                         cOptions.AddArguments("--enable-precise-memory-info");
-                        cOptions.AddArguments("--disable-popup-blocking");
+                        cOptions.AddArguments("enable-popup-blocking");
                         cOptions.AddArguments("--disable-default-apps");
-                        //cOptions.AddArguments("--headless");
+                        //cOptions.AddArguments("--headless");                        
 
                         // 서비스 초기화
                         ChromeDriverService  chromeDriverService = ChromeDriverService.CreateDefaultService();
@@ -501,8 +631,16 @@ namespace Winner
                 case "IE":
                     {
                         var driverService = InternetExplorerDriverService.CreateDefaultService();
-                        driverService.HideCommandPromptWindow = true;
-                        driver = new InternetExplorerDriver(driverService);
+                        driverService.HideCommandPromptWindow = true;                        
+                        
+                        var options = new InternetExplorerOptions
+                        {
+                            IgnoreZoomLevel = true
+                        };
+
+                        driver = new InternetExplorerDriver(driverService, options);
+                        //driver.Manage().Timeouts().PageLoad =  TimeSpan.FromSeconds(10);
+                        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                     }
                     break;
                 case "PhantomJS":
@@ -516,10 +654,12 @@ namespace Winner
                 case "랜덤":
                     {
                         string[] browsers = { "Chrome", "FireFox", "IE" };
-                        SelectBrowser(browsers[CommonUtils.GetRandomValue(0, browsers.Length - 1)]);
+                        SelectBrowser(browsers[CommonUtils.GetRandomValue(0, browsers.Length )]);
                     }
                     break;
             }
+
+            WAIT = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
      
         internal void SetLogManager(LogManager logManager)

@@ -38,6 +38,17 @@ namespace Winner
             return slots[0];
         }
 
+        internal List<Keyword> SelectAllKeyword()
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select * from keyword", Keyword.Column), conn);
+            List<Keyword> keywords = Keyword.MakeResultSet(reader);
+
+            DisconnectionToDB(conn);
+            return keywords;
+        }
+
         internal List<Configuration> SelectAllConfigurationByOwner(string owner)
         {
             SQLiteConnection conn = ConnectionToDB();
@@ -67,12 +78,36 @@ namespace Winner
         {
             SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = '{2}' order by sequence asc", LogicItem.Column, LogicItem.TableName, id), conn);
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} where logicId = '{2}' order by  CAST(sequence AS INTEGER)  asc", LogicItem.Column, LogicItem.TableName, id), conn);
             List<LogicItem> logicItems = LogicItem.MakeResultSet(reader);
 
             DisconnectionToDB(conn);
 
             return logicItems;
+        }
+
+        internal void InsertAllKeyword(List<Keyword> keywords)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+
+            using (var command = new SQLiteCommand(conn))
+            {
+                using (var transaction = conn.BeginTransaction())
+                {
+                    // 100,000 inserts
+                    for (var i = 0; i < keywords.Count; i++)
+                    {
+                        Keyword keyword = keywords.ElementAt(i);
+                        command.CommandText =
+                            string.Format("insert into  Keyword (" + Keyword.Column + ") values (" + Keyword.Values + ")", CommonUtils.MakeArray( keyword));
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            DisconnectionToDB(conn);
         }
 
         internal List<LogicInput> SelectAllLogicInputsByLogicId(string id)
@@ -91,7 +126,7 @@ namespace Winner
         {
             SQLiteConnection conn = ConnectionToDB();
 
-            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} l, {2} s where  l.logicid = s.logicid and s.oid = '{3}' order by sequence asc;", LogicItem.GetPrepixColumn("l"), LogicItem.TableName, Slot.TableName, slotId), conn);
+            SQLiteDataReader reader = SelectExecuteSQL(string.Format("select {0} from {1} l, {2} s where  l.logicid = s.logicid and s.oid = '{3}' order by  CAST(sequence AS INTEGER)  asc", LogicItem.GetPrepixColumn("l"), LogicItem.TableName, Slot.TableName, slotId), conn);
             List<LogicItem> logicItems = LogicItem.MakeResultSet(reader);
 
             DisconnectionToDB( conn);
@@ -116,6 +151,13 @@ namespace Winner
 
             DisconnectionToDB(conn);
             return rankings;
+        }
+
+        internal void UpdateSlotCurrCount(string slotId)
+        {
+            SQLiteConnection conn = ConnectionToDB();
+            ExecuteSQL(string.Format("update Slot Set CurrCount = CurrCount + 1 where oid = '{0}'", slotId), conn);
+            DisconnectionToDB(conn);
         }
 
         public SQLiteConnection ConnectionToDB()

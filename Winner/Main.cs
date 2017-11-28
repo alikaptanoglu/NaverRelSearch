@@ -58,10 +58,8 @@ namespace Winner
         // 폼 초기화
         private void Form1_Load(object sender, EventArgs e)
         {
-            // string ss =  LicenseUtils.Generate();
-            //MobileUtils.EnAbleAirPlainMode();
-            //MobileUtils.DisAbleAirPlainMode();       
 
+            //CommonUtils.SetMAC( "0001", "356F038277B2");
          
             if (Properties.Settings.Default.USE_LOGIN)
             {
@@ -83,8 +81,6 @@ namespace Winner
 
             // 주기적인작업 설정
             SetIntervalWork();
-
-            
 
             // 로그 초기화
             LogManager = new LogManager();
@@ -307,16 +303,26 @@ namespace Winner
         {
             if (!isStart)
             {
-                isStart = true;
-                pictureBox7.BackgroundImage = Winner.Properties.Resources.stop;
-                workerManager.Start();
+                Start();
             }
             else
             {
-                isStart = false;
-                pictureBox7.BackgroundImage = Winner.Properties.Resources.start;
-                workerManager.Stop();
+                Stop();
             }
+        }
+
+        public void Start()
+        {
+            isStart = true;
+            pictureBox7.BackgroundImage = Winner.Properties.Resources.stop;
+            workerManager.Start();
+        }
+
+        public void Stop()
+        {
+            isStart = false;
+            pictureBox7.BackgroundImage = Winner.Properties.Resources.start;
+            workerManager.Stop();
         }
 
         // 작업버튼 활성화 여부
@@ -625,7 +631,12 @@ namespace Winner
 
         // 키워드 순위 검색
         private void pictureBox1_Click_1(object sender, EventArgs e)
-        {         
+        {
+            SearchViewCount();
+        }
+
+        private void SearchViewCount()
+        {
             string keyword = textBox1.Text;
             queue.Enqueue(keyword);
         }
@@ -795,7 +806,23 @@ namespace Winner
         public DataGridViewRowCollection GetDataGridViewRows()
         {
             return dataGridView1.Rows;
-        }        
+        }
+
+        // 키워드 조회 엔터
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                SearchViewCount();
+            }
+        }
+
+        // 키워드 관리
+        private void pictureBox8_Click(object sender, EventArgs e)
+        {
+            KeywordManagerForm MdiChild = new KeywordManagerForm();
+            MdiChild.ShowDialog();
+        }
     }
 }
 

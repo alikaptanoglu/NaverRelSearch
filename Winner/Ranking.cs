@@ -1,5 +1,6 @@
 ﻿using Naver.SearchAd;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Remote;
 using RestSharp.Extensions.MonoHttp;
@@ -91,12 +92,27 @@ namespace Winner
                     pictureBox3.BackgroundImage = global::Winner.Properties.Resources.BB;                                        
                 }));
 
-                var service = PhantomJSDriverService.CreateDefaultService();
-                    service.SslProtocol = "any"; //"any" also works
-                    service.HideCommandPromptWindow = true;
-                    driver = new PhantomJSDriver(service);
+                var service = PhantomJSDriverService.CreateDefaultService(); 
+                service.SslProtocol = "any"; //"any" also works
+                service.HideCommandPromptWindow = true;                
+                driver = new PhantomJSDriver(service);
 
-                    DataGridViewRowCollection rows = dataGridView1.Rows;
+                //ChromeOptions cOptions = new ChromeOptions();
+                //cOptions.AddArguments("disable-infobars");
+                //cOptions.AddArguments("--js-flags=--expose-gc");
+                //cOptions.AddArguments("--enable-precise-memory-info");
+                //cOptions.AddArguments("--disable-popup-blocking");
+                //cOptions.AddArguments("--disable-default-apps");
+                //cOptions.AddArguments("--headless");                        
+
+                //// 서비스 초기화
+                //ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
+                //chromeDriverService.HideCommandPromptWindow = true;
+
+                //driver = new ChromeDriver(chromeDriverService, cOptions);
+
+
+                DataGridViewRowCollection rows = dataGridView1.Rows;
 
                     for (int i = 0; i < rows.Count; i++)
                     {
@@ -106,53 +122,72 @@ namespace Winner
                         string subKeyword = (string)cells[HEADER_SUB_KEYWORD].Value;
 
                         driver.Navigate().GoToUrl("https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" + HttpUtility.UrlEncode(keyword));
-                        IWebElement unfold = driver.FindElement(By.CssSelector(".unfold"));
-                        if (unfold.Displayed)
-                        {
-                            unfold.Click();
-                        }
-                        IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.CssSelector(".lst_relate a"));
-                        int currentWidth = 0;
-                        int line = 0;
-                        for (int j = 0; j < elements.Count; j++)
-                        {
-                            IWebElement element = elements.ElementAt(j);
-                            IWebElement li = element.FindElement(By.XPath("./.."));
-                            string WIDTH = li.GetCssValue("width");
+                                                
+                        IWebElement unfold = CssSelector.FindElement(driver, ".unfold");
+                        bool isRanked = false;
 
-                            int cusorWIDTH = int.Parse(WIDTH.Substring(0, WIDTH.IndexOf("px"))) + 13;
-                            currentWidth += cusorWIDTH;
-
-                            if (currentWidth > 460)
+                        if (unfold != null)
+                        {
+                            if (unfold.Displayed)
                             {
-                                currentWidth = cusorWIDTH;
-                                line++;
+                                unfold.Click();
                             }
+                            IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.CssSelector(".lst_relate a"));
+                            int currentWidth = 0;
+                            int line = 0;
 
-                            if (element.Text.Equals(subKeyword))
+
+                            for (int j = 0; j < elements.Count; j++)
                             {
-                                dataGridView1.Invoke(new Action(delegate ()
+                                IWebElement element = elements.ElementAt(j);
+                                IWebElement li = element.FindElement(By.XPath("./.."));
+                                string WIDTH = li.GetCssValue("width");
+                            
+                                int cusorWIDTH = (int)double.Parse(WIDTH.Substring(0, WIDTH.IndexOf("px"))) + 13;
+
+                                currentWidth += cusorWIDTH;
+
+                                if (currentWidth > 460)
                                 {
-                                    row.Cells[HEADER_RANKING].Value = element.GetAttribute("data-idx");
-                                    row.Cells[HEADER_UPDATE_DATE].Value = DateTime.Now.ToString("yyyy-MM-dd hh:mm");
-                                    if (line >= 2)
-                                    {
-                                        row.Cells[HEADER_IS_MORE].Value = "N";
-                                    }
-                                    else
-                                    {
-                                        row.Cells[HEADER_IS_MORE].Value = "Y";
-                                    }
-                                }));
+                                    currentWidth = cusorWIDTH;
+                                    line++;
+                                }
 
-                                currentWidth = 0;
-                                break;
-                            }
+                                if (element.Text.Equals(subKeyword))
+                                {
+                                    isRanked = true;
+
+                                    dataGridView1.Invoke(new Action(delegate ()
+                                    {
+                                        row.Cells[HEADER_RANKING].Value = element.GetAttribute("data-idx");
+                                        row.Cells[HEADER_UPDATE_DATE].Value = DateTime.Now.ToString("yyyy-MM-dd hh:mm");
+                                        if (line >= 2)
+                                        {
+                                            row.Cells[HEADER_IS_MORE].Value = "N";
+                                        }
+                                        else
+                                        {
+                                            row.Cells[HEADER_IS_MORE].Value = "Y";
+                                        }
+                                    }));
+
+                                    currentWidth = 0;
+                                    break;
+                                }
+                            }                          
                         }
+
+                        if (!isRanked)
+                        {
+                            row.Cells[HEADER_RANKING].Value = "*";
+                            row.Cells[HEADER_UPDATE_DATE].Value = DateTime.Now.ToString("yyyy-MM-dd hh:mm");
+                            row.Cells[HEADER_IS_MORE].Value = "N/A";
+                        }                        
                     }
                 }
                 catch (Exception e)
-                {
+                {                   
+                    
                 }
                 finally
                 {
@@ -231,11 +266,7 @@ namespace Winner
             dataGridView1.Rows.Add(row);
         }
 
-        /// <summary>
-        ///  키워드 삭제
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // 키워드 삭제
         private void RemoveKeyWord(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)

@@ -83,6 +83,16 @@ namespace Winner.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
+        internal static System.Drawing.Bitmap _48_48_a2e57089792d1c35cbc7788a9a9d12fa_flask {
+            get {
+                object obj = ResourceManager.GetObject("48-48-a2e57089792d1c35cbc7788a9a9d12fa-flask", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
         internal static System.Drawing.Bitmap AA {
             get {
                 object obj = ResourceManager.GetObject("AA", resourceCulture);

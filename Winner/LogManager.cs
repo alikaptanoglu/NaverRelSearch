@@ -16,7 +16,15 @@ namespace Winner
         {
            textBox.BeginInvoke(new Action(() =>
             {
-                textBox.AppendText("[" + DateTime.Now.ToString() + "] " + string.Format(log, list));
+                if (list.Length > 0)
+                {
+                    textBox.AppendText("[" + DateTime.Now.ToString() + "] " + string.Format(log, list));
+                }
+                else
+                {
+                    textBox.AppendText("[" + DateTime.Now.ToString() + "] " + log);
+                }
+                
                 textBox.AppendText(Environment.NewLine);
                 textBox.SelectionStart = textBox.Text.Length;
                 textBox.ScrollToCaret();

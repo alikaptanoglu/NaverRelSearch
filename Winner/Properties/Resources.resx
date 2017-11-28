@@ -118,8 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="if_go-up_118776" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_go-up_118776.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="48-48-2f7ba1707e6a77c762f0309636ffec74-configuration" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\48-48-2f7ba1707e6a77c762f0309636ffec74-configuration.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_meanicons_24_197210" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_meanicons_24_197210.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -127,14 +127,14 @@
   <data name="rsz_if_1_330413" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rsz_if_1_330413.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="if_17_3303994" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_17_3303994.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="re" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\re.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_POWER---RESTART_16946" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_POWER---RESTART_16946.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="if_1_3304131" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_1_3304131.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_7_330410-(1)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_7_330410-(1)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,8 +142,8 @@
   <data name="if_edit-add_9254 (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_edit-add_9254 (2)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="48-48-2f7ba1707e6a77c762f0309636ffec74-configuration" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\48-48-2f7ba1707e6a77c762f0309636ffec74-configuration.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_1_3304131" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_1_3304131.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_TRASH---FULL_16985" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_TRASH---FULL_16985.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,26 +193,26 @@
   <data name="KakaoTalk_20170812_2128198341" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\KakaoTalk_20170812_2128198341.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_meanicons_22_197212" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_meanicons_22_197212.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_go-top_118775" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_go-top_118775.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_11_330397-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_11_330397-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_go-down_118768" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_go-down_118768.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="로그인배경" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\로그인배경1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_NOTEPAD_16938" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_NOTEPAD_16938.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_7_330410-(1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_7_330410-(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="KakaoTalk_20170812_2128196801" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\KakaoTalk_20170812_2128196801.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="abc" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\abc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_go-up_118776" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_go-up_118776.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_7_330410-(1)6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_7_330410-(1)6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -223,20 +223,20 @@
   <data name="if_go-bottom_118767" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_go-bottom_118767.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_7_330410-(1)4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_7_330410-(1)4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="if_7_330410-(1)3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_7_330410-(1)3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="캡처" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\캡처.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_17_3303994" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_17_3303994.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_meanicons_22_197212" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_meanicons_22_197212.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_17_330399" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_17_330399.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\32-32-789a21572f6453fee6fc86cf8b2a1844-play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="48-48-47b1dd4ae4f2b98815bbee4c07fb936f-trophy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\48-48-47b1dd4ae4f2b98815bbee4c07fb936f-trophy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -244,17 +244,23 @@
   <data name="if_go-top_1187751" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_go-top_1187751.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_go-top_118775" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_go-top_118775.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="btn-backtoedit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn-backtoedit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\abc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_17_3303993" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_17_3303993.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="로그인배경" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\로그인배경1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_go-down_118768" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_go-down_118768.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_17_3303992" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_17_3303992.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_18_330400-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_18_330400-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_icons_play_1564490-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_icons_play_1564490-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -262,19 +268,16 @@
   <data name="if_TRASH---FULL_169851" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_TRASH---FULL_169851.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="btn-backtoedit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn-backtoedit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_7_330410-(1)4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1)4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_18_330400-iloveimg-resized" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_18_330400-iloveimg-resized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_7_330410-(1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_7_330410-(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="KakaoTalk_20170812_212819680" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\KakaoTalk_20170812_212819680.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32-32-789a21572f6453fee6fc86cf8b2a1844-play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="48-48-a2e57089792d1c35cbc7788a9a9d12fa-flask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\48-48-a2e57089792d1c35cbc7788a9a9d12fa-flask.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

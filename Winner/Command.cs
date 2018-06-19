@@ -37,20 +37,24 @@ namespace Winner
 
         public void doCommand()
         {
+            BeforeCommand();
             StartBrowser();
             doProcess();
             CloseBrowser();
+        }
+
+        // 슬롯작업 시작 전
+        private void BeforeCommand()
+        {
+            string[] waitTime = inputMap[LogicInput.CONST_SLOT_WAIT_TIME].Split(CommonUtils.delimiterChars);
+            logManager.AppendLog("[슬롯대기시간][{0}/{1}]", waitTime[0], waitTime[1]);
+            Stay(waitTime[0], waitTime[1]);
         }
 
         private void doProcess()
         {
             foreach (LogicItem item in items)
             {
-                
-                string[] waitTime = inputMap[LogicInput.CONST_SLOT_WAIT_TIME].Split(CommonUtils.delimiterChars);
-                logManager.AppendLog("슬롯대기시간 {0}~{1}초", waitTime[0], waitTime[1]);
-                Stay(waitTime[0], waitTime[1]);
-
                 ExecuteCommand(item.action, item.value);
             }                                    
         }
@@ -303,27 +307,27 @@ namespace Winner
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_blog_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.NEWS)
+                    else if (PROP.LOCATION.CATEGORY.code == Category.NEWS)
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector("._sp_each_title")) : driver.FindElements(By.CssSelector(".list_news .bx"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.CAFE)
+                    else if(PROP.LOCATION.CATEGORY.code == Category.CAFE)
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".sh_cafe_title")) : driver.FindElements(By.CssSelector(".lst_total .bx"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.IMAGE)
+                    else if(PROP.LOCATION.CATEGORY.code == Category.IMAGE)
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".thumb")) : driver.FindElements(By.CssSelector(".photo_grid a"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.KNOWLEDGE)
+                    else if(PROP.LOCATION.CATEGORY.code == Category.KNOWLEDGE)
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".question a")) : driver.FindElements(By.CssSelector(".lst_total a"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.MOVIE)
+                    else if(PROP.LOCATION.CATEGORY.code == Category.MOVIE)
                     {
                         elements = PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC ? driver.FindElements(By.CssSelector(".video_info a")) : driver.FindElements(By.CssSelector(".video_list .info_area a"));
                     }
-                    if (PROP.LOCATION.CATEGORY.code == Category.SEARCH)
+                    else if(PROP.LOCATION.CATEGORY.code == Category.SEARCH)
                     {
                         if ( PROP.AGENT.GetType() == Agent.AGENT_TYPE_PC)                        
                         {
@@ -486,12 +490,39 @@ namespace Winner
  
         private void doScroll(int interval, int y, int count)
         {
-            var jse = (IJavaScriptExecutor)driver;            
+            var jse = (IJavaScriptExecutor)driver;
+            
+            
+
             for (int i = 0; i < count; i++)
             {
-                jse.ExecuteScript(string.Format("window.scrollBy( {0},{1})", 0, y), "");
+                IWebElement element = null;
+
+                try
+                {
+                    IWebElement screenFrame = expandRootElement(driver.FindElement(By.Id("screenFrame")));
+                    element = expandRootElement(screenFrame.FindElement(By.Id("mainFrame")));
+                    IReadOnlyCollection<IWebElement> elements = element.FindElements(By.TagName("a"));
+                }
+                catch (Exception e)
+                {
+                    element = expandRootElement(driver.FindElement(By.Id("mainFrame")));
+                    IReadOnlyCollection<IWebElement> elements = element.FindElements(By.TagName("a"));
+                }
+
+                jse.ExecuteScript(string.Format("window.scrollBy( {0},{1})", 0, y), element);
+               // driver.FindElement(By.CssSelector("a")).SendKeys(OpenQA.Selenium.Keys.Down);
                 Thread.Sleep(interval);
             }
+        }
+
+        //Returns webelement
+        public IWebElement expandRootElement(IWebElement element)
+        {
+            var jse = (IJavaScriptExecutor)driver;
+            
+            IWebElement ele = (IWebElement)jse.ExecuteScript("return arguments[0].shadowRoot", element);
+            return ele;
         }
 
         private bool SetSearchKeyword(string selector, string keyword, int direction)

@@ -769,6 +769,7 @@ namespace Winner
         // 슬롯 수정
         private void pictureBox4_Click(object sender, EventArgs e)
         {
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 MessageBox.Show("선택된 슬롯이 없습니다.");

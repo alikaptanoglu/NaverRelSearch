@@ -264,6 +264,91 @@ namespace Winner
 
     }
 
+    class UIUtils {
+
+        // 그리드뷰에서 현재 선택된 단일 로우를 반환
+        public static int GetSelectedRow(Object sender)
+        {
+            DataGridView dataGridView = (DataGridView)sender;
+            int _index = 0;
+            if (dataGridView.SelectedRows.Count == 0 && dataGridView.SelectedCells.Count == 0)
+            {
+                // 선택된 그리드가 없을 경우
+                throw new UIException(1000,"선택된 로우가 없습니다.");
+                //MessageBox.Show("선택된 슬롯이 없습니다.");
+                //return null;
+            }
+            else if (dataGridView.SelectedRows.Count > 1)
+            {
+                //MessageBox.Show("수정은 하나의 슬롯만 선택하여 할 수 있습니다.");
+                //return null;
+
+                // 여러개의 그리드를 선택 했을 경우
+                throw new UIException(1001, "선택된 로우가 여러개 입니다.");
+            }
+            else {
+                
+                DataGridViewRow row = null;
+
+                if (dataGridView.SelectedRows.Count == 0)
+                {
+
+                    DataGridViewSelectedCellCollection dataGridViewSelectedCells = dataGridView.SelectedCells;
+                    int rowIndex = -1;
+                    int index = 0;
+                    foreach (DataGridViewCell cell in dataGridViewSelectedCells)
+                    {
+
+                        if (index > 0)
+                        {
+                            if (rowIndex != cell.RowIndex)
+                            {
+                                // 여러개의 그리드를 선택 했을 경우
+                                throw new UIException(1001, "선택된 로우가 여러개 입니다.");
+                            }
+                        }
+
+                        rowIndex = cell.RowIndex;
+                        index++;
+                    }
+
+                    _index = rowIndex;
+                }
+                else
+                {
+                    _index = dataGridView.SelectedRows[0].Index;
+                }
+
+                return _index;
+            }
+        }
+
+        public static List<int> GetSelectedRowIndexs(object sender)
+        {
+            DataGridView dataGridView = (DataGridView)sender;
+
+            if (dataGridView.SelectedRows.Count == 0 && dataGridView.SelectedCells.Count == 0)
+            {
+                throw new UIException(1000, "선택된 로우가 없습니다.");                
+            }           
+            else
+            {
+                DataGridViewRow row = null;
+                DataGridViewSelectedCellCollection dataGridViewSelectedCells = dataGridView.SelectedCells;
+                List<int> list = new List<int>();
+                
+                foreach (DataGridViewCell cell in dataGridViewSelectedCells)
+                {                        
+                    if ( !list.Contains(cell.RowIndex)) {
+                        list.Add(cell.RowIndex);
+                    }                                                                                                
+                }       
+                return list;
+            }
+        }
+
+    }
+
     class ObjectUtils
     {
         public static bool isNull( string Object)

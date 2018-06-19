@@ -142,11 +142,11 @@ namespace Winner
             m_menu = c[2];
             mainClass = c[3];
             code = c[4];
-    }
+        }
     }
 
     public class Location
-    {
+    {    
         public Category CATEGORY = new Category();
 
         public static string HOME = "H";
@@ -173,7 +173,7 @@ namespace Winner
         {
             if (location.Equals(HOME))
             {
-                CATEGORY.SetCategory(Category.NONE);
+                CATEGORY.SetCategory("없음");
             }
 
             this.location = location;

@@ -77,18 +77,18 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.textBox6 = new System.Windows.Forms.TextBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
@@ -139,6 +139,7 @@
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(423, 450);
             this.dataGridView1.TabIndex = 40;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // pictureBox10
             // 
@@ -644,6 +645,34 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "기본설정";
             // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(363, 51);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(43, 21);
+            this.textBox13.TabIndex = 104;
+            this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("굴림", 9F);
+            this.label20.Location = new System.Drawing.Point(344, 56);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(14, 12);
+            this.label20.TabIndex = 103;
+            this.label20.Text = "~";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("굴림", 9F);
+            this.label23.Location = new System.Drawing.Point(414, 57);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(17, 12);
+            this.label23.TabIndex = 43;
+            this.label23.Text = "초";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -652,6 +681,14 @@
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 19;
             this.label5.Text = "브라우저";
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(295, 51);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(43, 21);
+            this.textBox6.TabIndex = 42;
+            this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // comboBox3
             // 
@@ -667,6 +704,16 @@
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(138, 20);
             this.comboBox3.TabIndex = 18;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("굴림", 9F);
+            this.label22.Location = new System.Drawing.Point(234, 57);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(53, 12);
+            this.label22.TabIndex = 41;
+            this.label22.Text = "대기시간";
             // 
             // label4
             // 
@@ -716,52 +763,6 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(138, 20);
             this.comboBox2.TabIndex = 8;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("굴림", 9F);
-            this.label23.Location = new System.Drawing.Point(414, 57);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(17, 12);
-            this.label23.TabIndex = 43;
-            this.label23.Text = "초";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("굴림", 9F);
-            this.label22.Location = new System.Drawing.Point(234, 57);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(53, 12);
-            this.label22.TabIndex = 41;
-            this.label22.Text = "대기시간";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("굴림", 9F);
-            this.label20.Location = new System.Drawing.Point(344, 56);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(14, 12);
-            this.label20.TabIndex = 103;
-            this.label20.Text = "~";
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(295, 51);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(43, 21);
-            this.textBox6.TabIndex = 42;
-            this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox13
-            // 
-            this.textBox13.Location = new System.Drawing.Point(363, 51);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(43, 21);
-            this.textBox13.TabIndex = 104;
-            this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // SlotUpdate
             // 

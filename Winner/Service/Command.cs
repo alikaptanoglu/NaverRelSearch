@@ -8,7 +8,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.PhantomJS;
+
 using System.Threading;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Remote;
@@ -78,7 +78,7 @@ namespace Winner
 
             DefaultStay();
 
-            logManager.AppendLog(string.Format("[{0}][{1}] 작업을 시작합니다.", action, value));
+            logManager.AppendLog(string.Format("[{0}][{1}]", action, ObjectUtils.isNull(value, "랜덤")));
                         
             switch (action)
             {
@@ -676,10 +676,10 @@ namespace Winner
                     break;
                 case "PhantomJS":
                     {
-                        var service = PhantomJSDriverService.CreateDefaultService();
-                        service.SslProtocol = "tlsv1"; //"any" also works
-                        service.HideCommandPromptWindow = true;                                                       
-                        driver = new PhantomJSDriver( service);
+                       // var service = PhantomJSDriverService.CreateDefaultService();
+                       // service.SslProtocol = "tlsv1"; //"any" also works
+                        //service.HideCommandPromptWindow = true;                                                       
+                        //driver = new PhantomJSDriver( service);
                     }
                     break;
                 case "랜덤":

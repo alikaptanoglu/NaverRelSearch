@@ -1,7 +1,6 @@
 ﻿using Naver.SearchAd;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Remote;
 using RestSharp.Extensions.MonoHttp;
 using System;
@@ -92,10 +91,25 @@ namespace Winner
                     pictureBox3.BackgroundImage = global::Winner.Properties.Resources.BB;                                        
                 }));
 
-                var service = PhantomJSDriverService.CreateDefaultService(); 
-                service.SslProtocol = "any"; //"any" also works
-                service.HideCommandPromptWindow = true;                
-                driver = new PhantomJSDriver(service);
+
+                ChromeOptions cOptions = new ChromeOptions();
+                cOptions.AddArguments("disable-infobars");
+                cOptions.AddArguments("--js-flags=--expose-gc");
+                cOptions.AddArguments("--enable-precise-memory-info");
+                cOptions.AddArguments("enable-popup-blocking");
+                cOptions.AddArguments("--disable-default-apps");
+                cOptions.AddArguments("--headless");                        
+
+                // 서비스 초기화
+                ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+
+                driver = new ChromeDriver(chromeDriverService, cOptions);
+
+                //var service = PhantomJSDriverService.CreateDefaultService(); 
+                //service.SslProtocol = "any"; //"any" also works
+                //service.HideCommandPromptWindow = true;                
+                //driver = new PhantomJSDriver(service);
 
                 //ChromeOptions cOptions = new ChromeOptions();
                 //cOptions.AddArguments("disable-infobars");

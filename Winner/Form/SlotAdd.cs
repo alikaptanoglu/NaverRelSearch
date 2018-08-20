@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Winner.Service;
 
 namespace Winner
 {
@@ -15,6 +16,7 @@ namespace Winner
     {
 
         SQLite sqlite;
+        
 
         // 현재 로직 아이디
         string currentLogicId;
@@ -372,7 +374,7 @@ namespace Winner
             item.value = value;
 
             AddDataGridRow(item);
-            AutoSequence();
+            UIService.AutoSequence( dataGridView1);
         }
 
         private bool IsVaildate(string action, string value)
@@ -384,20 +386,7 @@ namespace Winner
 
             return true;
         }
-
-        // 자동 시퀀스 처리
-        private void AutoSequence()
-        {
-            int cellnum = 0;
-            int rownum = 0;
-
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                cellnum = cellnum + 1;
-                dataGridView1.Rows[rownum].Cells[0].Value = cellnum;
-                rownum = rownum + 1;
-            }
-        }
+      
 
         // 로직 변경
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -443,7 +432,7 @@ namespace Winner
             {
                 dataGridView1.Rows.RemoveAt(row.Index);
             }
-            AutoSequence();
+            UIService.AutoSequence(dataGridView1);
         }
 
         // 로직아이템 삭제
@@ -533,140 +522,29 @@ namespace Winner
         // 그리드 행 업
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.RowCount > 0)
-            {
-                if (dataGridView1.SelectedRows.Count > 0)
-                {
-                    int rowCount = dataGridView1.Rows.Count;
-                    int index = dataGridView1.SelectedCells[0].OwningRow.Index;
-
-                    if (index == 0)
-                    {
-                        return;
-                    }
-                    DataGridViewRowCollection rows = dataGridView1.Rows;
-
-
-
-                    // remove the previous row and add it behind the selected row.
-                    DataGridViewRow prevRow = rows[index - 1];
-                    rows.Remove(prevRow);
-                    prevRow.Frozen = false;
-                    rows.Insert(index, prevRow);
-                    dataGridView1.ClearSelection();
-                    dataGridView1.Rows[index - 1].Selected = true;
-                }
-            }
-            AutoSequence();
+            UIService.DataGridViewRowMoveUp(dataGridView1);
+            UIService.AutoSequence(dataGridView1);
         }
 
         // 그리드 행 아래로
         private void pictureBox5_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.RowCount > 0)
-            {
-                if (dataGridView1.SelectedRows.Count > 0)
-                {
-                    int rowCount = dataGridView1.Rows.Count;
-                    int index = dataGridView1.SelectedCells[0].OwningRow.Index;
-
-                    if (index == (rowCount - 1)) // include the header row
-                    {
-                        return;
-                    }
-                    DataGridViewRowCollection rows = dataGridView1.Rows;
-
-                    // remove the next row and add it in front of the selected row.
-                    DataGridViewRow nextRow = rows[index + 1];
-                    rows.Remove(nextRow);
-                    nextRow.Frozen = false;
-                    rows.Insert(index, nextRow);
-                    dataGridView1.ClearSelection();
-                    dataGridView1.Rows[index + 1].Selected = true;
-                }
-            }
-
-
+            UIService.DataGridViewRowMoveDown(dataGridView1);
+            UIService.AutoSequence(dataGridView1);
         }
 
         // 그리드 로우 최상단으로 이동
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.RowCount > 0)
-            {
-                if (dataGridView1.SelectedRows.Count > 0)
-                {
-                    int rowCount = dataGridView1.Rows.Count;
-                    int index = dataGridView1.SelectedCells[0].OwningRow.Index;
-
-                    if (index == 0)
-                    {
-                        return;
-                    }
-                    DataGridViewRowCollection rows = dataGridView1.Rows;
-                    DataGridViewRow targetRow = rows[index];
-                    List<DataGridViewRow> list = new List<DataGridViewRow>();
-
-                    list.Add(targetRow);
-                    for (int i = 0; i < rows.Count; i++)
-                    {
-                        if (i == index) continue;
-                        list.Add(rows[i]);
-                    }
-
-                    dataGridView1.Rows.Clear();
-
-                    foreach (DataGridViewRow row in list)
-                    {
-                        dataGridView1.Rows.Add(row);
-
-                    }
-
-                    dataGridView1.ClearSelection();
-                    dataGridView1.Rows[0].Selected = true;
-                }
-            }
-            AutoSequence();
+            UIService.DataGridViewRowMoveTop( dataGridView1);
+            UIService.AutoSequence(dataGridView1);
         }
 
         // 그리드 로우 최하단으로 이동
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.RowCount > 0)
-            {
-                if (dataGridView1.SelectedRows.Count > 0)
-                {
-                    int rowCount = dataGridView1.Rows.Count;
-                    int index = dataGridView1.SelectedCells[0].OwningRow.Index;
-
-                    if (index == (rowCount - 1)) // include the header row
-                    {
-                        return;
-                    }
-                    DataGridViewRowCollection rows = dataGridView1.Rows;
-                    DataGridViewRow targetRow = rows[index];
-                    List<DataGridViewRow> list = new List<DataGridViewRow>();
-
-                    for (int i = 0; i < rows.Count; i++)
-                    {
-                        if (i == index) continue;
-                        list.Add(rows[i]);
-                    }
-                    list.Add(targetRow);
-
-                    dataGridView1.Rows.Clear();
-
-                    foreach (DataGridViewRow row in list)
-                    {
-                        dataGridView1.Rows.Add(row);
-
-                    }
-
-                    dataGridView1.ClearSelection();
-                    dataGridView1.Rows[rowCount - 1].Selected = true;
-                }
-            }
-            AutoSequence();
+            UIService.DataGridViewRowMoveBottom(dataGridView1);
+            UIService.AutoSequence(dataGridView1);
         }
 
         // 슬롯추가

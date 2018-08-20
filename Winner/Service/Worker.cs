@@ -180,7 +180,7 @@ namespace Winner
             public void doProcess()
             {
                 try
-                {
+                {                    
                     DoWork();
                     ComplateWork();
                     _doneEvent.Set();
@@ -218,6 +218,7 @@ namespace Winner
                     command.doCommand();
                     command.Finish();
                 }
+                
             }
         }
 

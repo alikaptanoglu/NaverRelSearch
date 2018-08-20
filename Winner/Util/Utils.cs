@@ -360,6 +360,16 @@ namespace Winner
 
             return false;
         }
+
+        public static string isNull(string Object, string replaceValue)
+        {
+            if (Object == null || Object.Length == 0)
+            {
+                return replaceValue;
+            }
+
+            return Object;
+        }
     }
 
     class HanGulUtils

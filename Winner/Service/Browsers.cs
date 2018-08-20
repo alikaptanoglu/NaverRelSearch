@@ -3,7 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.PhantomJS;
+
 using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
@@ -365,8 +365,8 @@ namespace BrowserCollection
         {                        
             logManager.AppendLog("브라우저를 실행합니다.");
 
-            var service = PhantomJSDriverService.CreateDefaultService();
-            service.SslProtocol = "tlsv1"; //"any" also works
+            //var service = PhantomJSDriverService.CreateDefaultService();
+            //service.SslProtocol = "tlsv1"; //"any" also works
                                            //service.HideCommandPromptWindow = true;
                                            // driver = new PhantomJSDriver(service);
             
